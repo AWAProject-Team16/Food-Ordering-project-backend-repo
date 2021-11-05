@@ -1,4 +1,4 @@
-const db = require('../database.js');
+const db = require('../lib/database.js');
 
 const orders = {
     // getByIdbook: (idbook, callback) => {

@@ -1,4 +1,4 @@
-const db = require('../database');
+const db = require('../lib/database');
 
 const restaurants = {
   // getByIdmember: function(idmember, callback) {

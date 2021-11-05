@@ -1,17 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport');
+const authorization = require('./lib/authorization');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var ordersRouter = require('./routes/orders');
-var restaurantsRouter = require('./routes/restaurants');
-var categoriesRouter = require('./routes/categories');
-var productsRouter = require('./routes/products');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const ordersRouter = require('./routes/orders');
+const restaurantsRouter = require('./routes/restaurants');
+const categoriesRouter = require('./routes/categories');
+const productsRouter = require('./routes/products');
 
-var app = express();
+const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -22,8 +24,18 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+authorization(app, passport);
+
+app.get("/login", (req, res, next) => {
+  res.send('login na');
+});
+
+app.get("/dashboard", checkAuthenticated, (req, res) => {
+  res.send("Dashboard for " + req.user.name);
+});
+
 app.use('/', indexRouter);
-app.use('/about', (req, res) => res.render('about'));
+// app.use('/about', (req, res) => res.render('about'));
 app.use('/orders', ordersRouter);
 app.use('/users', usersRouter);
 app.use('/restaurants', restaurantsRouter);

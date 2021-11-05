@@ -1,14 +1,18 @@
-const db = require('../database.js');
+const db = require('../lib/database.js');
 const bcrypt = require('bcryptjs');
 
 const saltRounds = 10;
 
 const users = {
-  // getByEmailaddress: (emailaddress, callback) => {
-  //   db.query('select * from `member` where emailaddress=?',
-  //     [emailaddress],
-  //     callback);
-  // },
+  login: (username, callback) => {
+    db.query('select * from `users` where username=?',
+      [username],
+      callback);
+  },
+
+  logout: (session_id, callback) => {
+    console.log("later")
+  },
 
   // get: (emailaddress, password, callback) => {
   //   db.query('select idmember, firstname, lastname, emailaddress, address, phonenumber, image from `member` where emailaddress=? and password=?',
@@ -21,16 +25,16 @@ const users = {
   //     callback);
   // },
 
-  // getById: (idmember, callback) => {
-  //   db.query('select idmember, firstname, lastname, emailaddress, address, phonenumber, image from `member` where idmember=?',
-  //     [idmember],
-  //     callback);
-  // },
+  getById: (idusers, callback) => {
+    db.query('select idusers, username, name, address, email, account_type from `users` where idusers=?',
+      [idusers],
+      callback);
+  },
 
-  add: (member, callback) => {
-    bcrypt.hash(member.password, saltRounds, function (err, hash) {
+  add: (user, callback) => {
+    bcrypt.hash(user.password, saltRounds, function (err, hash) {
       return db.query('insert into `users`(username, password, name, address, email, account_type) values(?, ?, ?, ?, ?, ?)',
-        [member.username, hash, member.name, member.address, member.email, member.account_type],
+        [user.username, hash, user.name, user.address, user.email, user.account_type],
         callback);
     });
   },
