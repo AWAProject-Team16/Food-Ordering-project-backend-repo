@@ -26,8 +26,21 @@ const users = {
   // },
 
   getById: (idusers, callback) => {
-    db.query('select idusers, username, name, address, email, account_type from `users` where idusers=?',
+    db.query('select username, name, address, email, account_type from `users` where idusers=?',
       [idusers],
+      callback);
+  },
+
+  getByUsername: (username, callback) => {
+    db.query('select username from `users` where username=?',
+      [username],
+      callback
+      );
+  },
+
+  getByEmail: (email, callback) => {
+    db.query('select email from `users` where email=?',
+      [email],
       callback);
   },
 
