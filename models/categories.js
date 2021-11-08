@@ -1,58 +1,42 @@
 const db = require('../lib/database.js');
 
 const categories = {
-    // getByIdbook: (idbook, callback) => {
-    //     if ( idbook ) { 
-    //         db.query(
-    //             'select book.*, `member`.firstname, `member`.lastname from book inner join `member` on book.idmember=`member`.idmember where idbook=?',
-    //             [idbook],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
 
-    // getByIdbookLookupMemberTable: (idbook, callback) => {
-    //     if ( idbook ) { 
-    //         db.query(
-    //             'select book.*, firstname, lastname, emailaddress, address, phonenumber, `member`.image as member_image from book inner join `member` on book.idmember=`member`.idmember where idbook=?',
-    //             [idbook],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
+    // Get all categories from database
+    getAllCategories: (callback) => {
+            if( callback ) {
+                db.query('select category_name from categories', callback);
+            } 
+            else {
+                console.error('ERROR: categories cannot found');
+                return;
+            }
+    },
+    
+    // Get category from database by id
+    getCategoryById: (categoryId, callback) => {
+        if( callback ) {
+            db.query('select * from categories where id=?', [categoryId], callback);
+        } 
+        else {
+            console.error('ERROR: category by id not found');
+            return;
+        }
+    },
 
-    // getByIdmember: (idmember, callback) => {
-    //     if ( idmember ) { 
-    //         db.query(
-    //             'select * from book where idmember=?',
-    //             [idmember],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
+    // Creating category in category-table
+    createCategory: (restaurantId, categoryName, callback) => {
+        if(callback) {
+            db.query('insert into categories (restaurants_idrestaurants, category_name) value (?, ?)', [restaurantId, categoryName], callback);
+        }
+        else {
+            console.error('ERROR: category cant create');
+            return;
+        }
+    }
+}
 
-    // getLatest: (callback) => {
-    //     if ( callback ) { // :v
-    //         db.query(
-    //             'select * from book order by idmember desc limit 5',
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
-
-    // add: (book, callback) => {
+// add: (book, callback) => {
     //     if ( book && Object.keys(book).length > 0 ) {  
     //         db.query(
     //             'insert into book(title, idmember, author, `year`, edition, `description`, `condition`, image) values(?, ?, ?, ?, ?, ?, ?, ?)',
@@ -92,27 +76,8 @@ const categories = {
     //     }
     // },
 
-    // searchByAuthor: (author, callback) => {
-    //     if ( author ) {  
-    //         const likeString = `%${author}%`;
-    //         db.query(
-    //             "select * from book where author like ?",
-    //             [likeString],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: empty POST body!!!');
-    //         return;
-    //     }
-    // },
-
-    // update1: function(idbook, book, callback) {
-    //     return db.query(
-    //         'update book set image=? where idbook=?',
-    //         [book.image, idbook],
-    //         callback
-    //     );
-    // },
+    
+   // },
 
     // update2: function(idbook, book, callback) {
     //     return db.query(
