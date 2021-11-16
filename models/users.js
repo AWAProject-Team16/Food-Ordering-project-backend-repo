@@ -3,12 +3,25 @@ const bcrypt = require('bcryptjs');
 
 const saltRounds = 10;
 
+
+
+
+
 const users = {
+
+
+  getUserData: function(userId, callback) {
+    return db.query("select username, name, address, email, account_type from users where idusers = ?", [userId], callback);
+  },
+
+
   login: (username, callback) => {
     db.query('select * from `users` where username=?',
       [username],
       callback);
   },
+
+
 
   logout: (session_id, callback) => {
     console.log("later")

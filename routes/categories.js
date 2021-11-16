@@ -15,28 +15,19 @@ router.get('/', function(res) {
   })
 });
 
-
-// Get category by id
-router.get('/id', (req, res) => {
-  categories.getCategoryById(req.body, function(err, dbResult) {
+// Get restaurant categories
+router.get('/restaurant', 
+function(req, res) {
+  categories.getRestaurantCategories(req.body,
+    function(err, dbResult) {
     if(err) {
-      response.json(err);
+      res.json(err);
     }
     else {
-      response.json(dbResult);
+      res.json(dbResult)
     }
-  })
+  });
 });
 
-router.post('/categoryCreation', (req, res) => {
-  categories.createCategory(req.body, function(err, dbResult) {
-    if(err) {
-      response.json(err);
-    }
-    else {
-      response.json(dbResult);
-    }
-  })
-});
 
 module.exports = router;

@@ -6,6 +6,21 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const utils = require('../lib/utils');
 
+
+router.get('/', 
+function(req, res) {
+    users.getUserData(req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.json(err);
+      }
+      else {
+        res.json(dbResult);
+      }
+    });
+});
+
+
 // passport.use(new LocalStrategy({passReqToCallback: true},
 //   async (req, username, password, done) => {
 //     try {
