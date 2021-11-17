@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const restaurants = require('../models/restaurants');
 
-
 router.get('/', 
 function(req, res) {
     restaurants.getAllRestaurants(
@@ -15,7 +14,6 @@ function(req, res) {
       }
     });
 });
-
 
 router.get('/manager',
 function(req, res) {
@@ -30,8 +28,6 @@ function(req, res) {
     });
 });
 
-
-
 router.post('/newRestaurant',
   function(req, res) {
     restaurants.createRestaurant(req.body,
@@ -44,6 +40,7 @@ router.post('/newRestaurant',
       }
     });
 });
+
 /*
 router.post('/restaurant/modifyRestaurant', function(req, res) {
   restaurants.modifyRestaurant(req.body,

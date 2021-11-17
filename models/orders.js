@@ -1,6 +1,7 @@
 const db = require('../lib/database.js');
 
 const orders = {
+
     getOrderById: function(orderId, callback) {
         return db.query("select * from orders where orderId=?", [orderId], callback);
     },
@@ -16,6 +17,7 @@ const orders = {
     getOrderByRestaurant: function(restaurantId, callback) {
         return db.query("select * from orders where restaurants_idrestaurants=?", [restaurantId], callback);
     }
+    
 }
 
 module.exports = orders;

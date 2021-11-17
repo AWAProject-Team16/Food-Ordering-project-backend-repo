@@ -6,7 +6,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const utils = require('../lib/utils');
 
-
 router.get('/', 
 function(req, res) {
     users.getUserData(req.body,
@@ -19,6 +18,38 @@ function(req, res) {
       }
     });
 });
+
+router.post('/register',
+function(req, res) {
+  users.newUserRegister(req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.json(err);
+      }
+      else {
+        res.send('Register success');
+        res.json(dbResult[1]);
+      }
+    });
+});
+
+/*
+// router.post('/register', (req, res) => {
+//   const {username, password, name, address, email, account_type} = req.body;
+//   users.getById(idmember, (err, dbResult) => {
+//     if (err) {
+//       console.log(err);
+//       err.json({success: false});
+//     } else {
+//       res.json({
+//         'success': true,
+//         totalMembers: dbResult.length,
+//         members: dbResult
+//       }
+//       );
+//     }
+//   });
+// });
 
 
 // passport.use(new LocalStrategy({passReqToCallback: true},
@@ -78,22 +109,6 @@ function(req, res) {
 //   }
 // ));
 
-// router.post('/register', (req, res) => {
-//   const {username, password, name, address, email, account_type} = req.body;
-//   users.getById(idmember, (err, dbResult) => {
-//     if (err) {
-//       console.log(err);
-//       err.json({success: false});
-//     } else {
-//       res.json({
-//         'success': true,
-//         totalMembers: dbResult.length,
-//         members: dbResult
-//       }
-//       );
-//     }
-//   });
-// });
 
 // router.get('/search', (req, res) => {
 //   const {idmember} = req.query;
@@ -183,9 +198,6 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-
-
-
 router.get('/logout', (req, res) => {
   console.log(req.session)
   req.logOut();
@@ -243,7 +255,6 @@ const isPasswordStrong = password => {
 
 // const isUsernameExist = async username => {
 //   let rv = false;
-
 //   await users.getByUsername(username, (err, dbResult) => {console.log('username: ', username)
 //     if (err) {
 //       console.log(err);
@@ -252,8 +263,8 @@ const isPasswordStrong = password => {
 //       rv =  dbResult.length > 0;console.log('rv: ', rv)
 //     }
 //   })
-
 //   return rv;
 // }
 
+*/
 module.exports = router;

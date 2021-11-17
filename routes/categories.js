@@ -24,7 +24,7 @@ function(req, res) {
       res.json(err);
     }
     else {
-      res.json(dbResult)
+      res.json(dbResult);
     }
   });
 });
