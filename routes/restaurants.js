@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const restaurants = require('../models/restaurants');
+const db = require('../lib/database.js');
 
 router.get('/', 
 function(req, res) {
@@ -10,23 +11,42 @@ function(req, res) {
         res.json(err);
       }
       else {
-        res.json(dbResult);
+        res.status(200).json({Restaurants: dbResult});
       }
     });
 });
 
-router.get('/manager',
-function(req, res) {
-    restaurants.getManagerRestaurants(req.body,
+router.get('/:idrestaurants',
+  function(req, res) {
+    restaurants.getRestaurantById(req.params.idrestaurants,
     function(err, dbResult) {
       if(err) {
         res.json(err);
       }
       else {
-        res.json(dbResult);
+        if(dbResult == '') {
+          res.status(404).send("Restaurant not found");
+        }
+        else {
+          res.status(200).json(dbResult);
+        }
       }
-    });
+
+  });
 });
+
+// router.get('/manager',
+// function(req, res) {
+//     restaurants.getManagerRestaurants(req.body,
+//     function(err, dbResult) {
+//       if(err) {
+//         res.json(err);
+//       }
+//       else {
+//         res.json(dbResult);
+//       }
+//     });
+// });
 
 router.post('/newRestaurant',
   function(req, res) {
@@ -36,22 +56,36 @@ router.post('/newRestaurant',
         res.json(err);
       }
       else {
-        res.json(dbResult[1]); // 1 = success
+        res.status(201).json({'status': 201 + ', New restaurant created'});
       }
     });
 });
 
-/*
-router.post('/restaurant/modifyRestaurant', function(req, res) {
-  restaurants.modifyRestaurant(req.body,
-    function(err, dbResult) {
-      if(err) {
-        res.json(err);
-      }
-      else {
-        res.json(dbResult[1]); // 1 = success
-      }
-    });
-});
-*/
+
+// router.post('/:id/menuCreation',
+// function(req, res) {
+//   restaurants.newMenu(req.body,
+//     function(err, dbResult) {
+//       if(err) {
+//         res.status(400).json(err);
+//       }
+//       else {
+//         res.status(201).json({'status': 201 + ', Menu created for restaurant'});
+//       }
+//     });
+// });
+
+
+// router.post('/restaurant/modifyRestaurant', function(req, res) {
+//   restaurants.modifyRestaurant(req.body,
+//     function(err, dbResult) {
+//       if(err) {
+//         res.json(err);
+//       }
+//       else {
+//         res.json(dbResult[1]); // 1 = success
+//       }
+//     });
+// });
+
 module.exports = router;

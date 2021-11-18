@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const utils = require('../lib/utils');
+const db = require('../lib/database.js');
 
 router.get('/', 
 function(req, res) {
@@ -14,7 +15,7 @@ function(req, res) {
         res.json(err);
       }
       else {
-        res.json(dbResult);
+        res.status(200).json({user: dbResult, status: ['200, User get - success']});
       }
     });
 });
@@ -27,8 +28,7 @@ function(req, res) {
         res.json(err);
       }
       else {
-        res.send('Register success');
-        res.json(dbResult[1]);
+        res.status(201).json({status: ['201, Registration successful']})
       }
     });
 });

@@ -2,6 +2,7 @@ const { response } = require('express');
 const express = require('express');
 const router = express.Router();
 const categories = require('../models/categories');
+const db = require('../lib/database.js');
 
 // Get all categories
 router.get('/', function(res) {
@@ -12,7 +13,7 @@ router.get('/', function(res) {
     else {
       response.json(dbResult);
     }
-  })
+  });
 });
 
 // Get restaurant categories

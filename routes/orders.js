@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const orders = require('../models/orders');
+const db = require('../lib/database.js');
 
 // Get order information by orderId
-router.get('/', 
+router.get('/getById', 
 function(req, res) {
     orders.getOrderById(req.body,
     function(err, dbResult) {

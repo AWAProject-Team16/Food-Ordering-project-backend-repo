@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const products = require('../models/products');
+const db = require('../lib/database.js');
 
 router.get('/', 
 function(req, res) {

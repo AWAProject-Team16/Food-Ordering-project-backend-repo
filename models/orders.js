@@ -2,20 +2,20 @@ const db = require('../lib/database.js');
 
 const orders = {
 
-    getOrderById: function(orderId, callback) {
-        return db.query("select * from orders where orderId=?", [orderId], callback);
+    getOrderById: function(id, callback) {
+        return db.query("select * from orders where idorders=?", [id.idorders], callback);
     },
 
-    getOrderByCustomer: function(userId, callback) {
-        return db.query("select * from orders where users_idusers=?", [userId], callback);
+    getOrderByCustomer: function(id, callback) {
+        return db.query("select * from orders where users_idusers=?", [id.userId], callback);
     },
 
-    getOrderByManager: function(userId, callback) {
-        return db.query("select * from orders where users_idusers=?", [userId], callback);
+    getOrderByManager: function(id, callback) {
+        return db.query("select * from orders where users_idusers=?", [id.userId], callback);
     },
 
-    getOrderByRestaurant: function(restaurantId, callback) {
-        return db.query("select * from orders where restaurants_idrestaurants=?", [restaurantId], callback);
+    getOrderByRestaurant: function(id, callback) {
+        return db.query("select * from orders where restaurants_idrestaurants=?", [id.restaurantId], callback);
     }
     
 }
