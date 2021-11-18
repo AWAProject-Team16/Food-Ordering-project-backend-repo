@@ -16,7 +16,25 @@ function(req, res) {
     });
 });
 
-router.get('/:idrestaurants',
+router.get('/ownRestaurants',
+function(req, res) {
+    restaurants.getManagerRestaurants(req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.json(err);
+      }
+      else {
+        if(dbResult == '') {
+          res.status(404).send("Own restaurants not found");
+        }
+        else {
+          res.status(200).json({Own_Restaurants: dbResult});
+        }
+      }
+    });
+});
+
+router.get('/:idrestaurants?',
   function(req, res) {
     restaurants.getRestaurantById(req.params.idrestaurants,
     function(err, dbResult) {
@@ -34,19 +52,6 @@ router.get('/:idrestaurants',
 
   });
 });
-
-// router.get('/manager',
-// function(req, res) {
-//     restaurants.getManagerRestaurants(req.body,
-//     function(err, dbResult) {
-//       if(err) {
-//         res.json(err);
-//       }
-//       else {
-//         res.json(dbResult);
-//       }
-//     });
-// });
 
 router.post('/newRestaurant',
   function(req, res) {

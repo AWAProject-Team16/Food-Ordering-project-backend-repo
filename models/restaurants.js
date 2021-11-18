@@ -6,10 +6,11 @@ const restaurants = {
     return db.query("select idrestaurants, users_idusers, image, name, address, restaurant_type, operating_hours, price_level from restaurants", callback);
   },
 
-  // getManagerRestaurants: function(id, callback) {
-  //   return db.query("select * from restaurants join users ON \
-  //   restaurants.users_idusers = users.idusers where idusers=? AND account_type = 2", [userId], callback);
-  // },
+  getManagerRestaurants: function(id, callback) {
+    return db.query("select idrestaurants, image, restaurants.name, restaurants.address, restaurant_type, operating_hours, \
+    price_level, restaurant_description from restaurants join users ON \
+    restaurants.users_idusers = users.idusers where idusers=? AND account_type = 2", [id.userId], callback);
+  },
 
   getRestaurantById: function(id, callback) {
     return db.query("select * from restaurants where idrestaurants=?", [id], callback);

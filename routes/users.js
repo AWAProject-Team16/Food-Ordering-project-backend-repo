@@ -15,7 +15,7 @@ function(req, res) {
         res.json(err);
       }
       else {
-        res.status(200).json({user: dbResult, status: ['200, User get - success']});
+        res.status(200).json({user: dbResult});
       }
     });
 });
