@@ -3,15 +3,20 @@ const router = express.Router();
 const restaurants = require('../models/restaurants');
 const db = require('../lib/database.js');
 
-router.get('/', 
+router.get('/type/:restaurant_type?', 
 function(req, res) {
-    restaurants.getAllRestaurants(
+    restaurants.foodCategoryRestaurants(req.params.restaurant_type,
     function(err, dbResult) {
       if(err) {
         res.json(err);
       }
       else {
-        res.status(200).json({Restaurants: dbResult});
+        if(dbResult == '') {
+          res.status(404).send("Restaurant type not found")
+        }
+        else{
+          res.status(200).json({Restaurants: dbResult});
+        }
       }
     });
 });
@@ -34,7 +39,7 @@ function(req, res) {
     });
 });
 
-router.get('/:idrestaurants?',
+router.get('/id/:idrestaurants?',
   function(req, res) {
     restaurants.getRestaurantById(req.params.idrestaurants,
     function(err, dbResult) {
