@@ -3,6 +3,24 @@ const router = express.Router();
 const restaurants = require('../models/restaurants');
 const db = require('../lib/database.js');
 
+router.get('/', 
+function(req, res) {
+    restaurants.allRestaurants(
+    function(err, dbResult) {
+      if(err) {
+        res.json(err);
+      }
+      else {
+        if(dbResult == '') {
+          res.status(404).send("No available restaurants")
+        }
+        else{
+          res.status(200).json({Restaurants: dbResult});
+        }
+      }
+    });
+});
+
 router.get('/type/:restaurant_type?', 
 function(req, res) {
     restaurants.foodCategoryRestaurants(req.params.restaurant_type,

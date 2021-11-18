@@ -2,6 +2,10 @@ const db = require('../lib/database');
 
 const restaurants = {
 
+  allRestaurants: function(callback) {
+    return db.query("select * from restaurants", callback);
+  },
+
   foodCategoryRestaurants: function(type, callback) {
     return db.query("select idrestaurants, users_idusers, image, name, address, restaurant_type, operating_hours, price_level from restaurants where restaurant_type=?", [type], callback);
   },
