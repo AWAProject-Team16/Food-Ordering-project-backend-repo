@@ -4,14 +4,20 @@ const saltRounds = 10;
 
 const users = {
 
+  getUsers: function(callback) {
+    return db.query("select * from users", callback);
+  },
+  
   getUserData: function(id, callback) {
     return db.query("select username, name, address, email, account_type from users where idusers = ?", [id.userId], callback);
   },
 
   newUserRegister: function(info, callback) {
-    return db.query("insert into users (username, name, password, address, email, account_type) Values (?,?,?,?,?,?)", 
-    [info.username, info.name, info.password, info.address, info.email, info.account_type], callback);
-  }
+    bcrypt.hash(info.password, 10, function(err, hash) {
+      return db.query("insert into users (username, name, password, address, email, account_type) Values (?,?,?,?,?,?)", 
+      [info.username, info.name, hash, info.address, info.email, info.account_type], callback);
+  });
+}
 
 //   get: (emailaddress, password, callback) => {
 //     db.query('select idmember, firstname, lastname, emailaddress, address, phonenumber, image from `member` where emailaddress=? and password=?',

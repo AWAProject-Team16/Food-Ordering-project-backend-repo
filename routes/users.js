@@ -3,12 +3,12 @@ const router = express.Router();
 const users = require('../models/users');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const utils = require('../lib/utils');
+const BasicStrategy = require('passport-http').BasicStrategy;
 const db = require('../lib/database.js');
 
-router.get('/', 
-function(req, res) {
+
+
+router.get('/', (req, res) => {
     users.getUserData(req.body,
     function(err, dbResult) {
       if(err) {
@@ -52,62 +52,25 @@ function(req, res) {
 // });
 
 
-// passport.use(new LocalStrategy({passReqToCallback: true},
-//   async (req, username, password, done) => {
-//     try {
-//       users.login(username, (err, dbResult) => {
-//         if (err) {
-//           return done(err);
-//         } else {
-//           if (dbResult.length > 0) {
-//             bcrypt.compare(password, dbResult[0].password, (err, compareResult) => {
-//               if (compareResult) {
-//                 // res.json({
-//                 //   status: 200,
-//                 //   message: 'Login successfully [server-side redirecting available]',
-//                 //   token: '[Implement later]',
-//                 //   session_id: '[Implement later]',
-//                 // });
-//                 return done(null, dbResult[0]);
-//               } else {
-//                 console.log('Wrong password');
-//                 // res.json({status: 403, message: 'Invalid username or password'});
-//                 req.session.messages.push({text: 'Invalid username or password', type: 'danger'});
-//                 return done(null, false);
-//               }
-//             });
-//           } else {
-//             console.log("user does not exists");
-//             // res.json({status: 403, message: 'Invalid username or password'});
-//             req.session.messages.push({text: 'Invalid username or password', type: 'danger'});
-//             return done(null, false);
-//           }
-//         }
-//       });
-
-//       passport.serializeUser((user, done) => {
-//         done(null, dbResult[0].idusers)
-//       });
-
-//       passport.deserializeUser(async (id, done) =>{
-//         try {
-//           users.getById(id, (err, dbResult) =>{
-//             if (err) {
-//               return done(err);
-//             } else {
-//               const user = dbResult[0];
-//               return done(null, user);
-//             }
-//           });
-//         } catch (error) {
-//           return done(error);
-//         }
-//       })
-//     } catch (error) {
-//       return done(error);
-//     }
-//   }
-// ));
+      passport.deserializeUser(async (id, done) =>{
+        try {
+          users.getById(id, (err, dbResult) =>{
+            if (err) {
+              return done(err);
+            } else {
+              const user = dbResult[0];
+              return done(null, user);
+            }
+          });
+        } catch (error) {
+          return done(error);
+        }
+      })
+    } catch (error) {
+      return done(error);
+    }
+  }
+));
 
 
 // router.get('/search', (req, res) => {
@@ -267,4 +230,5 @@ const isPasswordStrong = password => {
 // }
 
 */
+
 module.exports = router;

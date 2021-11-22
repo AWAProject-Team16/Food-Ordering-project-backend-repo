@@ -4,15 +4,22 @@ const orders = require('../models/orders');
 const db = require('../lib/database.js');
 
 // Get order information by orderId
-router.get('/getById', 
+// Protected session not done yet
+router.get('/:id',
 function(req, res) {
-    orders.getOrderById(req.body,
+    orders.getOrderById(req.params.id, req.body,
     function(err, dbResult) {
       if(err) {
-        res.json(err);
+        res.status(404).json(err);
       }
       else {
-        res.json(dbResult);
+        if(dbResult == '') {
+          res.status(200).json('Order not found');
+        }
+        else {
+          res.status(200).json({Order: dbResult})
+        }
+
       }
     });
 });
@@ -23,10 +30,16 @@ function(req, res) {
   orders.getOrderByCustomer(req.body,
   function(err, dbResult) {
     if(err) {
-      res.json(err);
+      res.status(404).json(err);
     }
     else {
-      res.json(dbResult);
+      if(dbResult == '') {
+        res.status(200).json('Orders not found');
+      }
+      else {
+        res.status(200).json({Orders: dbResult});
+      }
+      
     }
   });
 });
@@ -37,24 +50,36 @@ function(req, res) {
   orders.getOrderByManager(req.body,
   function(err, dbResult) {
     if(err) {
-      res.json(err);
+      res.status(404).json(err);
     }
     else {
-      res.json(dbResult);
+      if(dbResult == '') {
+        res.status(200).json('Orders not found')
+      }
+      else {      
+        res.status(200).json({Orders: dbResult});
+      }
+
     }
   });
 });
 
 // Get all restaurant orders by restaurantId
-router.get('/',
+router.get('/restaurant/:restaurantId',
 function(req, res) {
-  orders.getOrderByRestaurant(req.body,
+  orders.getOrderByRestaurant(req.params.restaurantId, req.body,
   function(err, dbResult) {
     if(err) {
-      res.json(err);
+      res.status(404).json(err);
     }
     else {
-      res.json(dbResult);
+      if(dbResult == '') {
+        res.status(200).send('Orders not found');
+      }
+      else {      
+        res.status(200).json({Orders: dbResult});
+      }
+
     }
   });
 });
