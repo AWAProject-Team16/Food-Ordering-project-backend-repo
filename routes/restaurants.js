@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const restaurants = require('../models/restaurants');
 const passport = require('passport');
+const cors = require('cors');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const db = require('../lib/database.js');
-
 
 router.get('/', 
 function(req, res) {
@@ -24,7 +24,7 @@ function(req, res) {
     });
 });
 
-router.get('/type/:restaurant_type?', 
+router.get('/type/:restaurant_type', 
 function(req, res) {
     restaurants.foodCategoryRestaurants(req.params.restaurant_type,
     function(err, dbResult) {
@@ -42,7 +42,7 @@ function(req, res) {
     });
 });
 
-router.get('/ownRestaurants', function(req, res) {
+router.get('/ownRestaurants', passport.authenticate('basic', { session: false }), (req, res) => {
     restaurants.getManagerRestaurants(req.body,
     function(err, dbResult) {
       if(err) {

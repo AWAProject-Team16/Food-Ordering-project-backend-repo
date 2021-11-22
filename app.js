@@ -10,6 +10,9 @@ const categoriesRouter = require('./routes/categories');
 const productsRouter = require('./routes/products');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
+const db = require('./lib/database.js');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
 

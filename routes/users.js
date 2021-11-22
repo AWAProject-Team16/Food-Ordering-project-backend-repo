@@ -3,12 +3,37 @@ const router = express.Router();
 const users = require('../models/users');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const BasicStrategy = require('passport-http').BasicStrategy;
+const Strategy = require('passport-http').BasicStrategy;
 const db = require('../lib/database.js');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
+router.use(bodyParser.json());
+router.use(cors())
+router.use(passport.initialize());
+
+// Passport authentication
+passport.use(new Strategy((username, password, done) => {
+  db.query('SELECT username, password FROM users WHERE username = ?', [username]).then(dbResults => {
+    if(dbResults.length == 0)
+    {
+      done(null, false);
+    }
+    bcrypt.compare(password, dbResults[0].password).then(bcryptResult => {
+      if(bcryptResult == true)
+      {
+        done(null, dbResults[0]);
+      }
+      else
+      {
+        done(null, false);
+      }
+    })
+  }).catch(dbError => done(err))
+}));
 
 
-
-router.get('/', (req, res) => {
+router.get('/', passport.authenticate('basic', {session: false}), (req, res) => {
     users.getUserData(req.body,
     function(err, dbResult) {
       if(err) {
@@ -19,6 +44,7 @@ router.get('/', (req, res) => {
       }
     });
 });
+
 
 router.post('/register',
 function(req, res) {
@@ -32,6 +58,7 @@ function(req, res) {
       }
     });
 });
+
 
 /*
 // router.post('/register', (req, res) => {

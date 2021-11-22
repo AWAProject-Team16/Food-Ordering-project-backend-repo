@@ -7,16 +7,19 @@ const users = {
   getUsers: function(callback) {
     return db.query("select * from users", callback);
   },
-  
+
   getUserData: function(id, callback) {
     return db.query("select username, name, address, email, account_type from users where idusers = ?", [id.userId], callback);
   },
 
   newUserRegister: function(info, callback) {
+    
     bcrypt.hash(info.password, 10, function(err, hash) {
       return db.query("insert into users (username, name, password, address, email, account_type) Values (?,?,?,?,?,?)", 
       [info.username, info.name, hash, info.address, info.email, info.account_type], callback);
-  });
+    });
+ 
+    
 }
 
 //   get: (emailaddress, password, callback) => {

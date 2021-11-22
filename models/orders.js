@@ -16,7 +16,13 @@ const orders = {
 
     getOrderByRestaurant: function(restaurantId, userId, callback) {
         return db.query("select * from orders where restaurants_idrestaurants=? AND users_idusers=?", [restaurantId, userId.userId], callback);
-    }
+    },
+
+    addOrder: function(info, callback) {
+        return db.query("insert into orders(restaurants_idrestaurants, users_idusers, order_date, order_delivery_location, order_status, \
+        order_status_extra_info, order_total_cost) values (?,?,?,?,?,?,?)", [info.restaurantId, info.userId, info.order_date, info.location, info.status, 
+        info.status_extra, info.cost], callback);
+    },
     
 }
 

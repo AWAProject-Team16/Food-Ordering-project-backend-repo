@@ -4,8 +4,7 @@ const orders = require('../models/orders');
 const db = require('../lib/database.js');
 
 // Get order information by orderId
-// Protected session not done yet
-router.get('/:id',
+router.get('/:id', 
 function(req, res) {
     orders.getOrderById(req.params.id, req.body,
     function(err, dbResult) {
