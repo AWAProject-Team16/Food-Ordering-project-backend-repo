@@ -6,15 +6,15 @@ const orders = {
         return db.query("select * from orders where idorders=? AND users_idusers=?", [id, userId.userId], callback);
     },
 
-    getOrderByCustomer: function(userId, callback) {
+    getOrdersByCustomer: function(userId, callback) {
         return db.query("select * from orders where users_idusers=?", [userId.userId], callback);
     },
 
-    getOrderByManager: function(userId, callback) {
+    getOrdersByManager: function(userId, callback) {
         return db.query("select * from orders where users_idusers=?", [userId.userId], callback);
     },
 
-    getOrderByRestaurant: function(restaurantId, userId, callback) {
+    getOrdersByRestaurant: function(restaurantId, userId, callback) {
         return db.query("select * from orders where restaurants_idrestaurants=? AND users_idusers=?", [restaurantId, userId.userId], callback);
     },
 
@@ -24,6 +24,9 @@ const orders = {
         info.status_extra, info.cost], callback);
     },
     
+    addDetailedOrder: function(info, callback) {
+        return db.query("insert into order_products(products_idproducts, orders_idorders) values (?,?)", [info.productId, info.orderid], callback);
+    },
 }
 
 module.exports = orders;

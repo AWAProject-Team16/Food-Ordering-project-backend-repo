@@ -31,27 +31,22 @@ passport.use(new Strategy((username, password, u) => {
       if(bcryptResult == true) { return u(null, user) }
       else { return u(null, false, {message: errMessage}) }
     });
-
   }).catch(err => u(null));
 
 }));
 
-console.log(request.user);
-
-router.get('/login', passport.authenticate('basic', {session: false}), (req, res) => {
-  users.userAuth(req.user,
-    function(err, dbResult) {
-      if(err) {
-        res.json(err);
-      }
-      else {
-        res.redirect('/users/user/'+req.user);
-      }
-    });
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
 });
 
-router.get('/user/:id', passport.authenticate('basic', {session: false}), (req, res) => {
-  users.getUserData(req.params.id,
+passport.deserializeUser(function(id, done) {
+  user.findById(function(err, user) {
+    done(err, user);
+  });
+});
+
+router.get('/login', passport.authenticate('basic', {session: false}), (req, res) => {
+  users.getUserData(req.user,
     function(err, dbResult) {
       if(err) {
         res.json(err);
@@ -62,12 +57,21 @@ router.get('/user/:id', passport.authenticate('basic', {session: false}), (req, 
     });
 });
 
+// router.get('/user', passport.authenticate('basic', {session: false}), (req, res) => {
+//   users.getUserData(req.user,
+//     function(err, dbResult) {
+//       if(err) {
+//         res.json(err);
+//       }
+//       else {
+//         res.json(dbResult);
+//       }
+//     });
+// });
+
 // router.get('/logout', function(req, res) {
-//   if(req.isAuthenticated()) {
-//     req.logout();
-//     delete req.session();
-//     res.redirect('/users');
-//   }
+//   passport.use('null', 'null');
+//   res.redirect('/users/login');
 // });
 
 
@@ -78,7 +82,7 @@ router.post('/register', function(req, res) {
         res.status(400).json(err);
       }
       else {
-        res.status(200).json({Status: 'Registration success'});
+        res.status(201).json({Status: 'Registration success'});
       }
   });
 });

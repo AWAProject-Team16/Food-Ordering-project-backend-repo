@@ -12,7 +12,7 @@ function(req, res) {
         res.status(404).json(err);
       }
       else {
-        if(dbResult.length == '') {
+        if(dbResult == '') {
           res.status(200).json('Order not found');
         }
         else {
@@ -31,7 +31,7 @@ function(req, res) {
         res.status(404).json(err);
       }
       else {
-        if(dbResult.length == 0) {
+        if(dbResult == '') {
           res.status(200).json('Order not found');
         }
         else {
@@ -44,13 +44,13 @@ function(req, res) {
 // Get all customer orders by userId
 router.get('/',
 function(req, res) {
-  orders.getOrderByCustomer(req.body,
+  orders.getOrdersByCustomer(req.body,
   function(err, dbResult) {
     if(err) {
       res.status(404).json(err);
     }
     else {
-      if(dbResult.length == 0) {
+      if(dbResult == '') {
         res.status(200).json('Orders not found');
       }
       else {
@@ -61,9 +61,9 @@ function(req, res) {
 });
 
 // Get all manager orders by userId
-router.get('/', 
+router.get('/',
 function(req, res) {
-  orders.getOrderByManager(req.body,
+  orders.getOrdersByManager(req.body,
   function(err, dbResult) {
     if(err) {
       res.status(404).json(err);
@@ -83,7 +83,7 @@ function(req, res) {
 // Get all restaurant orders by restaurantId
 router.get('/restaurant/:restaurantId',
 function(req, res) {
-  orders.getOrderByRestaurant(req.params.restaurantId, req.body,
+  orders.getOrdersByRestaurant(req.params.restaurantId, req.body,
   function(err, dbResult) {
     if(err) {
       res.status(404).json(err);
@@ -99,5 +99,27 @@ function(req, res) {
     }
   });
 });
+
+router.post('/',
+function(req, res) {
+  orders.addOrder(req.body,
+    function(err) {
+      if(err) {
+        res.status(400).json(err);
+      }
+      else {
+        res.status(201).json({Status: 'Order created'});
+        orders.addDetailedOrder(req.body,
+          function(err) {
+            if(err) {
+              res.status(400).json(err);
+            }
+            else {
+              res.status(201).json({Status: 'Extra details created'});
+            }
+          });
+      }
+    })
+})
 
 module.exports = router;

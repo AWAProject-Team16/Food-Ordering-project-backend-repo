@@ -30,11 +30,39 @@ function(req, res) {
     }
     else {
       if(dbResult == '') {
-        res.status(200).json('Products in category not found');
+        res.status(200).json('Category is empty');
       }
-      res.status(200).json({dbResult});
+      else {
+        res.status(200).json({dbResult});
+      }
     }
   });
+});
+
+router.post('/addProduct',
+function(req, res) {
+  products.addProduct(req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.status(400).json(err);
+      }
+      else {
+        res.status(201).json({Status: 'Product added'});
+      }
+    });
+});
+
+router.delete('/deleteProduct',
+function(req, res) {
+  products.deleteProduct(req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.status(400).json(err);
+      }
+      else {
+        res.status(200).json({Status: "Product deleted"});
+      }
+    });
 });
 
 module.exports = router;

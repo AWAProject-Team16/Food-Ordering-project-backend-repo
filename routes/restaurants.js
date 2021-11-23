@@ -42,21 +42,39 @@ function(req, res) {
     });
 });
 
-router.get('/ownRestaurants', passport.authenticate('basic', { session: false }), (req, res) => {
-    restaurants.getManagerRestaurants(req.body,
-    function(err, dbResult) {
-      if(err) {
-        res.status(404).json(err);
+// router.get('/ownRestaurants', passport.authenticate('basic', { session: false }), (req, res) => {
+//     restaurants.getManagerRestaurants(req.body,
+//     function(err, dbResult) {
+//       if(err) {
+//         res.status(404).json(err);
+//       }
+//       else {
+//         if(dbResult == '') {
+//           res.status(200).send("Own restaurants not found");
+//         }
+//         else {
+//           res.status(200).json({Own_Restaurants: dbResult});
+//         }
+//       }
+//     });
+// });
+
+router.get('/ownRestaurants',
+function(req, res) {
+  restaurants.getManagerRestaurants(req.body,
+  function(err, dbResult) {
+    if(err) {
+      res.status(404).json(err);
+    }
+    else {
+      if(dbResult == '') {
+        res.status(200).send("Own restaurants not found");
       }
       else {
-        if(dbResult == '') {
-          res.status(200).send("Own restaurants not found");
-        }
-        else {
-          res.status(200).json({Own_Restaurants: dbResult});
-        }
+        res.status(200).json({Own_Restaurants: dbResult});
       }
-    });
+    }
+  });
 });
 
 router.get('/id/:idrestaurants?',
@@ -90,5 +108,6 @@ router.post('/newRestaurant',
       }
     });
 });
+
 
 module.exports = router;

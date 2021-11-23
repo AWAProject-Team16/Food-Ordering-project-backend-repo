@@ -12,8 +12,8 @@ const users = {
     return db.query("select idusers from users where idusers=?", [id], callback);
   },
 
-  getUserData: function(id, callback) {
-    return db.query("select username, name, address, email, account_type from users where idusers=?", [id], callback);
+  getUserData: function(info, callback) {
+    return db.query("select username, name, address, email, account_type from users where idusers=?", [info], callback);
   },
 
   newUserRegister: function(info, callback) {
