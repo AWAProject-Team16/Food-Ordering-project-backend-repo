@@ -12,13 +12,31 @@ function(req, res) {
         res.status(404).json(err);
       }
       else {
-        if(dbResult == '') {
+        if(dbResult.length == '') {
           res.status(200).json('Order not found');
         }
         else {
           res.status(200).json({Order: dbResult})
         }
 
+      }
+    });
+});
+
+router.get('/:id',
+function(req, res) {
+  orders.getOrderStatus(req.params.id,
+    function(err, dbResult) {
+      if(err) {
+        res.status(404).json(err);
+      }
+      else {
+        if(dbResult.length == 0) {
+          res.status(200).json('Order not found');
+        }
+        else {
+          res.status(200).json({Status: dbResult});
+        }
       }
     });
 });
@@ -32,13 +50,12 @@ function(req, res) {
       res.status(404).json(err);
     }
     else {
-      if(dbResult == '') {
+      if(dbResult.length == 0) {
         res.status(200).json('Orders not found');
       }
       else {
         res.status(200).json({Orders: dbResult});
       }
-      
     }
   });
 });

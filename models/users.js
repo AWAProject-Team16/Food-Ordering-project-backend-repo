@@ -4,12 +4,16 @@ const saltRounds = 10;
 
 const users = {
 
-  getUsers: function(callback) {
-    return db.query("select * from users", callback);
+  // userLogin: function(callback) {
+  //   return db.query("select username, name, address, email, account_type from users", callback);
+  // },
+
+  userAuth: function(id, callback) {
+    return db.query("select idusers from users where idusers=?", [id], callback);
   },
 
   getUserData: function(id, callback) {
-    return db.query("select username, name, address, email, account_type from users where idusers = ?", [id.userId], callback);
+    return db.query("select username, name, address, email, account_type from users where idusers=?", [id], callback);
   },
 
   newUserRegister: function(info, callback) {
