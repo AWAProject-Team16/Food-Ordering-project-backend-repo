@@ -1,126 +1,43 @@
 const db = require('../lib/database.js');
 
 const products = {
-    // getByIdbook: (idbook, callback) => {
-    //     if ( idbook ) { 
-    //         db.query(
-    //             'select book.*, `member`.firstname, `member`.lastname from book inner join `member` on book.idmember=`member`.idmember where idbook=?',
-    //             [idbook],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
 
-    // getByIdbookLookupMemberTable: (idbook, callback) => {
-    //     if ( idbook ) { 
-    //         db.query(
-    //             'select book.*, firstname, lastname, emailaddress, address, phonenumber, `member`.image as member_image from book inner join `member` on book.idmember=`member`.idmember where idbook=?',
-    //             [idbook],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
+    getAllProducts: function(callback) {
+        return db.query("select * from products", callback);
+    },
 
-    // getByIdmember: (idmember, callback) => {
-    //     if ( idmember ) { 
-    //         db.query(
-    //             'select * from book where idmember=?',
-    //             [idmember],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
+    getProductById: function(id, callback) {
+        return db.query('select * from products where idproducts = ?', [id], callback);
+    },
 
-    // getLatest: (callback) => {
-    //     if ( callback ) { // :v
-    //         db.query(
-    //             'select * from book order by idmember desc limit 5',
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: idmember not found!!!');
-    //         return;
-    //     }
-    // },
+    getProductByCategory: function(id, callback) {
+        return db.query('select * from products where categories_idcategories = ?', [id], callback);
+    },
 
-    // add: (book, callback) => {
-    //     if ( book && Object.keys(book).length > 0 ) {  
-    //         db.query(
-    //             'insert into book(title, idmember, author, `year`, edition, `description`, `condition`, image) values(?, ?, ?, ?, ?, ?, ?, ?)',
-    //             [book.title, book.idmember, book.author, book.year, book.edition, book.description, book.condition, book.image],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: empty POST body!!!');
-    //         return;
-    //     }
-    // },
 
-    // delete: (idmember, idbook, callback) => {
-    //     if ( idmember && idbook ) {  
-    //         db.query(
-    //             'delete from book where idmember=? and idbook=?',
-    //             [idmember, idbook],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: empty POST body!!!');
-    //         return;
-    //     }
-    // },
+    checkPermissions: function(userId, categoryId, callback) {
+        return db.query('select account_type, categories.idcategories from users JOIN restaurants ON users.idusers = restaurants.users_idusers \
+        JOIN categories ON restaurants.idrestaurants = categories.restaurants_idrestaurants where idusers = ? AND idcategories = ?', [userId, categoryId], callback);
+    },
 
-    // searchByTitle: (title, callback) => {
-    //     if ( title ) {  
-    //         const likeString = `%${title}%`;
-    //         db.query(
-    //             "select * from book where title like ?",
-    //             [likeString],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: empty POST body!!!');
-    //         return;
-    //     }
-    // },
+    addProduct: function(categoryId, info, callback) {
+        return db.query('insert into products (categories_idcategories, product_name, product_description, product_cost, product_image) values (?,?,?,?,?)',
+        [categoryId, info.name, info.description, info.cost, info.image], callback);
+    },
 
-    // searchByAuthor: (author, callback) => {
-    //     if ( author ) {  
-    //         const likeString = `%${author}%`;
-    //         db.query(
-    //             "select * from book where author like ?",
-    //             [likeString],
-    //             callback
-    //         );
-    //     } else {
-    //         console.error('ERROR: empty POST body!!!');
-    //         return;
-    //     }
-    // },
+    editProduct: function(userId, categoryId, productId, info, callback) {
+        return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories JOIN restaurants ON\
+        categories.restaurants_idrestaurants = restaurants.idrestaurants set product_name=?, product_description=?, product_cost=?, product_image=? \
+        where idproducts =? AND categories_idcategories = ? AND users_idusers=?", [info.name, info.description, info.cost, info.image, productId, categoryId, userId], callback);
+    },
 
-    // update1: function(idbook, book, callback) {
-    //     return db.query(
-    //         'update book set image=? where idbook=?',
-    //         [book.image, idbook],
-    //         callback
-    //     );
-    // },
 
-    // update2: function(idbook, book, callback) {
-    //     return db.query(
-    //         'update book set title=?, author=?, `year`=?, edition=?, `description`=?, `condition`=? where idbook=?',
-    //         [book.title, book.author, book.year, book.edition, book.description, book.condition, idbook],
-    //         callback
-    //     );
-    // }
+    deleteProduct: function(userId, categoryId, productId, callback) {
+        return db.query('delete products from products JOIN categories ON products.categories_idcategories = categories.idcategories \
+        JOIN restaurants ON categories.restaurants_idrestaurants = restaurants.idrestaurants \
+        where idproducts = ? AND idcategories = ? AND users_idusers = ?', [productId, categoryId, userId], callback);
+    }
+    
 }
 
 module.exports = products;
