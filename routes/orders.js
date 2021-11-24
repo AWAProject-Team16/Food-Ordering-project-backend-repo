@@ -3,6 +3,8 @@ const router = express.Router();
 const orders = require('../models/orders');
 const db = require('../lib/database.js');
 
+// !!! NOT DONE YET !!!
+
 // Get order information by orderId
 router.get('/:id', 
 function(req, res) {
