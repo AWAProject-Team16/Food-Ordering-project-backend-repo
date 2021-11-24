@@ -1,5 +1,6 @@
 const db = require('../lib/database.js');
 
+// !!! Not done yet !!!
 const orders = {
 
     getOrderById: function(id, userId, callback) {
