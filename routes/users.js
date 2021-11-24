@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const users = require('../models/users');
-const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const Strategy = require('passport-http').BasicStrategy;
 const db = require('../lib/database.js');
@@ -9,41 +8,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { request } = require('express');
 const { session } = require('passport');
+const auth = require('../lib/passportAuth');
 
 router.use(bodyParser.json());
 router.use(cors())
-
 router.use(passport.initialize());
 
-
-// Password authentication
-passport.use(new Strategy((username, password, u) => {
-
-  var errMessage = 'Incorrect username or password'
-  db.query('SELECT idusers, username, password FROM users WHERE username = ?', [username]).then(dbResults => {
-
-    var user = dbResults[0]['idusers'];
-
-    if(dbResults.length == 0)
-    { return u(null, false, {message: errMessage}) }
-
-    bcrypt.compare(password, dbResults[0].password).then(bcryptResult => {
-      if(bcryptResult == true) { return u(null, user) }
-      else { return u(null, false, {message: errMessage}) }
-    });
-  }).catch(err => u(null));
-
-}));
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  user.findById(function(err, user) {
-    done(err, user);
-  });
-});
 
 router.get('/login', passport.authenticate('basic', {session: false}), (req, res) => {
   users.getUserData(req.user,
@@ -52,7 +22,7 @@ router.get('/login', passport.authenticate('basic', {session: false}), (req, res
         res.json(err);
       }
       else {
-        res.json(dbResult);
+        res.redirect(dbResult);
       }
     });
 });

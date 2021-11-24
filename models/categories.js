@@ -6,17 +6,27 @@ const categories = {
     //     return db.query('select * from categories');
     // },
 
-    getRestaurantCategories: function(restaurantId, callback) {
-        return db.query('select * from categories where restaurant_idrestaurants = ?', [restaurantId], callback);
+    getRestaurantCategories: function(id, callback) {
+        return db.query('select * from categories where restaurants_idrestaurants = ?', [id], callback);
     },
 
-    addCategory: function(info, callback) {
-        return db.query('insert into categories (restaurants_idrestaurants, category_name) values (?, ?)', [info.restaurantId, info.name], callback);
+    checkPermissions: function(userId, restaurantId, callback) {
+        return db.query('select account_type, restaurants.idrestaurants from users JOIN restaurants ON users.idusers = restaurants.users_idusers where idusers = ? AND idrestaurants = ?', [userId, restaurantId], callback);
     },
 
-    deleteCategory: function(id, callback) {
-        return db.query('delete from categories where idcategories = ?', [id.categoryId], callback);
-    }
+    addCategory: function(restaurantId, info, callback) {
+        return db.query('insert into categories (restaurants_idrestaurants, category_name) values (?, ?)', [restaurantId, info.name], callback);
+    },
+
+    renameCategory: function(userId, restaurantId, categoryId, info, callback) {
+        return db.query('UPDATE categories JOIN restaurants ON categories.restaurants_idrestaurants = restaurants.idrestaurants set category_name=?  \
+        where idcategories = ? AND restaurants_idrestaurants=? AND users_idusers=?', [info.name, categoryId, restaurantId, userId], callback);
+    },
+
+    deleteCategory: function(userId, restaurantId, categoryId, callback) {
+        return db.query('delete categories from categories JOIN restaurants ON categories.restaurants_idrestaurants = restaurants.idrestaurants \
+        where idcategories = ? AND restaurants_idrestaurants=? AND users_idusers=?', [categoryId, restaurantId, userId], callback);
+    },
 
 }
 

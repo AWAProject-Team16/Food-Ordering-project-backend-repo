@@ -9,7 +9,7 @@ function(req, res) {
     orders.getOrderById(req.params.id, req.body,
     function(err, dbResult) {
       if(err) {
-        res.status(404).json(err);
+        res.status(500).json(err);
       }
       else {
         if(dbResult == '') {
@@ -28,7 +28,7 @@ function(req, res) {
   orders.getOrderStatus(req.params.id,
     function(err, dbResult) {
       if(err) {
-        res.status(404).json(err);
+        res.status(500).json(err);
       }
       else {
         if(dbResult == '') {
@@ -47,7 +47,7 @@ function(req, res) {
   orders.getOrdersByCustomer(req.body,
   function(err, dbResult) {
     if(err) {
-      res.status(404).json(err);
+      res.status(500).json(err);
     }
     else {
       if(dbResult == '') {
@@ -66,7 +66,7 @@ function(req, res) {
   orders.getOrdersByManager(req.body,
   function(err, dbResult) {
     if(err) {
-      res.status(404).json(err);
+      res.status(500).json(err);
     }
     else {
       if(dbResult == '') {
@@ -86,7 +86,7 @@ function(req, res) {
   orders.getOrdersByRestaurant(req.params.restaurantId, req.body,
   function(err, dbResult) {
     if(err) {
-      res.status(404).json(err);
+      res.status(500).json(err);
     }
     else {
       if(dbResult == '') {
@@ -105,7 +105,7 @@ function(req, res) {
   orders.addOrder(req.body,
     function(err) {
       if(err) {
-        res.status(400).json(err);
+        res.status(500).json(err);
       }
       else {
         res.status(201).json({Status: 'Order created'});
