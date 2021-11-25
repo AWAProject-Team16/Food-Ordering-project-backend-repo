@@ -22,7 +22,7 @@ router.get('/login', passport.authenticate('basic', {session: false}), (req, res
         res.json(err);
       }
       else {
-        res.redirect(dbResult);
+        res.redirect('/restaurants');
       }
     });
 });

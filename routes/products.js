@@ -10,10 +10,10 @@ router.use(cors())
 router.use(passport.initialize());
 
 
-// Gets all products. Works
-router.get('/',
+// Gets all restaurant products. Works
+router.get('/restaurant/:idrestaurants',
 function(req, res) {
-  products.getAllProducts(
+  products.getAllProducts(req.params.idrestaurants,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
