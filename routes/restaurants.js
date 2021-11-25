@@ -86,7 +86,6 @@ router.post('/ownRestaurants', passport.authenticate('basic', { session: false }
     });
 });
 
-
 // Creates new restaurant. Without checking account_type from selected user. Not yet done
 router.post('/newRestaurant', passport.authenticate('basic', { session: false }),
   function(req, res) {
