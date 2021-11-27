@@ -13,9 +13,9 @@ router.use(passport.initialize());
 
 
 
-router.post('/ordersHistory', passport.authenticate('basic', { session: false }),
+router.post('/ordersHistory', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  orders.getUserOrders(req.user,
+  orders.getUserOrders(req.user.user,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -32,9 +32,9 @@ function(req, res) {
 });
 
 // Gets order details (what products was ordered and its' costs)
-router.post('/ordersHistory/orderId/:idorders', passport.authenticate('basic', { session: false }),
+router.post('/ordersHistory/orderId/:idorders', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  orders.getOrderDetails(req.user, req.params.idorders,
+  orders.getOrderDetails(req.user.user, req.params.idorders,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -50,9 +50,9 @@ function(req, res) {
     });
 });
 
-router.post('/ordersHistory/restaurant/:idrestaurants', passport.authenticate('basic', {session: false}),
+router.post('/ordersHistory/restaurant/:idrestaurants', passport.authenticate('jwt', {session: false}),
 function(req, res) {
-  orders.getRestaurantOrders(req.user, req.params.idrestaurants,
+  orders.getRestaurantOrders(req.user.user, req.params.idrestaurants,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);

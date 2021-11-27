@@ -4,6 +4,7 @@ const restaurants = require('../models/restaurants');
 const passport = require('passport');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 
 router.use(bodyParser.json());
 router.use(cors())
@@ -69,8 +70,8 @@ function(req, res) {
 });
 
 // Get all user restaurants who authenticated and have account_type = 2. But if account_type != 2, then get same error message thats manager get (Own restaurants not found)
-router.post('/ownRestaurants', passport.authenticate('basic', { session: false }), (req, res) => {
-    restaurants.getManagerRestaurants(req.user,
+router.get('/ownRestaurants', passport.authenticate('jwt', { session: false }), (req, res) => {
+    restaurants.getManagerRestaurants(req.user.user,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -87,9 +88,9 @@ router.post('/ownRestaurants', passport.authenticate('basic', { session: false }
 });
 
 // Creates new restaurant. Without checking account_type from selected user. Not yet done
-router.post('/newRestaurant', passport.authenticate('basic', { session: false }),
+router.post('/newRestaurant', passport.authenticate('jwt', { session: false }),
   function(req, res) {
-    restaurants.createRestaurant(req.user, req.body,
+    restaurants.createRestaurant(req.user.user, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -106,7 +107,7 @@ router.post('/newRestaurant', passport.authenticate('basic', { session: false })
 });
 
 // Modifies selected restaurant by restaurantId. If the account does not have permission to do so, the restaurant cannot be changed. Works
-router.post('/:restaurant_id/editRestaurant', passport.authenticate('basic', {session: false}),
+router.post('/:restaurant_id/editRestaurant', passport.authenticate('jwt', {session: false}),
  function(req, res) {
    if(req.body.name.length < 3)
    {
@@ -114,7 +115,7 @@ router.post('/:restaurant_id/editRestaurant', passport.authenticate('basic', {se
    }
 
    else {
-   restaurants.editRestaurant(req.user, req.params.restaurant_id, req.body,
+   restaurants.editRestaurant(req.user.user, req.params.restaurant_id, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -132,9 +133,9 @@ router.post('/:restaurant_id/editRestaurant', passport.authenticate('basic', {se
  });
 
 // Removes the restaurant by restaurantId. If not your own restaurant, restaurant deletion is not possible. Works
-router.delete('/:restaurant_id/deleteRestaurant', passport.authenticate('basic', {session: false}),
+router.delete('/:restaurant_id/deleteRestaurant', passport.authenticate('jwt', {session: false}),
   function(req, res) {
-    restaurants.deleteRestaurant(req.user, req.params.restaurant_id,
+    restaurants.deleteRestaurant(req.user.user, req.params.restaurant_id,
       function(err, dbResult) {
         if(err) {
           res.status(500).json(err);

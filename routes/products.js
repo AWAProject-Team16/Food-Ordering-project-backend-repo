@@ -69,9 +69,9 @@ function(req, res) {
 });
 
 // Adds a product to the selected category by categoryId. If the account does not have permission to do so, the product will not be added to the category. Works
-router.post('/category/:category_id/addProduct', passport.authenticate('basic', { session: false }),
+router.post('/category/:category_id/addProduct', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  products.checkPermissions(req.user, req.params.category_id,
+  products.checkPermissions(req.user.user, req.params.category_id,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -105,9 +105,9 @@ function(req, res) {
 });
 
 // Modifies product information by productId and categoryId. If the account does not have permission to do so, the product cannot be changed. Works
-router.post('/category/:category_id/product/:product_id/editProduct', passport.authenticate('basic', { session: false }),
+router.post('/category/:category_id/product/:product_id/editProduct', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  products.editProduct(req.user, req.params.category_id, req.params.product_id, req.body,
+  products.editProduct(req.user.user, req.params.category_id, req.params.product_id, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -124,9 +124,9 @@ function(req, res) {
 });
 
 // Removes the product from the selected category with productId. If not your own created product, product deletion is not possible.
-router.delete('/category/:category_id/product/:product_id/deleteProduct', passport.authenticate('basic', { session: false }),
+router.delete('/category/:category_id/product/:product_id/deleteProduct', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  products.deleteProduct(req.user, req.params.category_id, req.params.product_id,
+  products.deleteProduct(req.user.user, req.params.category_id, req.params.product_id,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);

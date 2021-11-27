@@ -8,24 +8,44 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { request } = require('express');
 const { session } = require('passport');
-const auth = require('../lib/passportAuth');
+const jwtSecretKey = require('../lib/passportAuth');
+const jwt = require('jsonwebtoken');
+const portForJwt = require('../app.js');
 
 router.use(bodyParser.json());
 router.use(cors())
 router.use(passport.initialize());
 
 
-router.get('/login', passport.authenticate('basic', {session: false}), (req, res) => {
-  users.getUserData(req.user,
-    function(err, dbResult) {
-      if(err) {
-        res.json(err);
-      }
-      else {
-        res.redirect('/restaurants');
-      }
-    });
-});
+// router.get('/login', passport.authenticate('basic', {session: false}), (req, res) => {
+//   users.getUserData(req.user,
+//     function(err, dbResult) {
+//       if(err) {
+//         res.json(err);
+//       }
+//       else {
+//         res.redirect('/restaurants');
+//       }
+//     });
+// });
+
+
+// Secret key need be same
+router.post('/loginJWT', passport.authenticate('basic', {session: false}), (req, res) => {
+
+        const payload = {
+          user : req.user
+        };
+        
+        const options = {
+         
+        };
+
+        const token = jwt.sign(payload, "Test1", options);
+        console.log(token);
+        res.json({ token });
+
+})
 
 // router.get('/user', passport.authenticate('basic', {session: false}), (req, res) => {
 //   users.getUserData(req.user,
