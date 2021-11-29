@@ -8,7 +8,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { request } = require('express');
 const { session } = require('passport');
-const jwtSecretKey = require('../lib/passportAuth');
 const jwt = require('jsonwebtoken');
 const portForJwt = require('../app.js');
 
@@ -41,7 +40,7 @@ router.post('/loginJWT', passport.authenticate('basic', {session: false}), (req,
          
         };
 
-        const token = jwt.sign(payload, "Test1", options);
+        const token = jwt.sign(payload, jwtSecretKey, options);
         console.log(token);
         res.json({ token });
 
