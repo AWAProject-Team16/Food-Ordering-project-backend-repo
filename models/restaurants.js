@@ -3,7 +3,7 @@ const db = require('../lib/database');
 const restaurants = {
 
   allRestaurants: function(callback) {
-    return db.query("select idrestaurants, users_idusers, image, name, address, restaurant_type, operating_hours, price_level from restaurants", callback);
+    return db.query("select idrestaurants, users_idusers, image, name, address, restaurant_type, operating_hours, price_level, phonenumber from restaurants", callback);
   },
   
   getRestaurantById: function(id, callback) {
@@ -22,9 +22,9 @@ const restaurants = {
 
   createRestaurant: function(id, settings, callback) {
     return db.query("insert into restaurants (name, address, image, \
-    restaurant_type, operating_hours, price_level, restaurant_description, users_idusers) VALUES (?,?,?,?,?,?,?,?)",
+    restaurant_type, operating_hours, price_level, restaurant_description, phonenumber, users_idusers) VALUES (?,?,?,?,?,?,?,?,?)",
     [settings.name, settings.address, settings.image, settings.restaurant_type, 
-     settings.operating_hours, settings.price_level, settings.restaurant_description, id], callback);
+     settings.operating_hours, settings.price_level, settings.restaurant_description, settings.phone, id], callback);
   },
   
   editRestaurant: function(userId, restaurantId, info, callback) {
