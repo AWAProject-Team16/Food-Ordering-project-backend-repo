@@ -4,7 +4,6 @@ const restaurants = require('../models/restaurants');
 const passport = require('passport');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
 
 router.use(bodyParser.json());
 router.use(cors())

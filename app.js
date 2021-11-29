@@ -1,4 +1,3 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -8,11 +7,6 @@ const ordersRouter = require('./routes/orders');
 const restaurantsRouter = require('./routes/restaurants');
 const categoriesRouter = require('./routes/categories');
 const productsRouter = require('./routes/products');
-const passport = require('passport');
-const BasicStrategy = require('passport-http').BasicStrategy;
-const db = require('./lib/database.js');
-const cors = require('cors');
-const bodyParser = require('body-parser');
 
 const app = express();
 

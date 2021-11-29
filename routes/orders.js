@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const orders = require('../models/orders');
-const db = require('../lib/database');
 
 const passport = require('passport');
 const cors = require('cors');

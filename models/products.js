@@ -3,7 +3,7 @@ const db = require('../lib/database.js');
 const products = {
 
     getAllProducts: function(id,callback) {
-        return db.query("select * from products join categories on products.categories_idcategories = categories.idcategories \
+        return db.query("select idproducts, categories_idcategories, category_name, product_name, product_description, product_cost, product_image from products join categories on products.categories_idcategories = categories.idcategories \
         where restaurants_idrestaurants = ?", [id], callback);
     },
 
