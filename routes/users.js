@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const users = require('../models/users');
+
 const passport = require('passport');
-const Strategy = require('passport-http').BasicStrategy;
+const Strategy = require('../lib/passportAuth.js');
+
 const db = require('../lib/database.js');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -30,6 +32,13 @@ router.use(passport.initialize());
 
 
 // Secret key need be same
+
+
+
+require('dotenv').config();
+let jwtSecretKeyLogin = process.env.secret;
+
+
 router.post('/loginJWT', passport.authenticate('basic', {session: false}), (req, res) => {
 
         const payload = {
@@ -40,11 +49,14 @@ router.post('/loginJWT', passport.authenticate('basic', {session: false}), (req,
          
         };
 
-        const token = jwt.sign(payload, jwtSecretKey, options);
+        const token = jwt.sign(payload, jwtSecretKeyLogin, options);
+        console.log(jwtSecretKeyLogin);
         console.log(token);
         res.json({ token });
 
+
 })
+
 
 // router.get('/user', passport.authenticate('basic', {session: false}), (req, res) => {
 //   users.getUserData(req.user,
