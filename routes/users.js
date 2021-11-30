@@ -34,20 +34,9 @@ router.post('/login', passport.authenticate('basic', {session: false}), (req, re
 })
 
 
-
 router.post('/register', function(req, res) {
-  
-  if(req.body.username.length < 3) {
-    res.status(400).json({'Status': 400 + ', Minimum for username is 3 symbols'});
-  }
-  if(req.body.password.length < 4) {
-    res.status(400).json({'Status': 400 + ', Minimum for password is 4 symbols'});
-  }
-  if(req.body.email == false) {
-    res.status(400).json({'Status': 400 + ', Empty email field'});
-  }
 
-  else {
+
   users.newUserRegister(req.body,
     function(err, dbResult) {
       if(err) {
@@ -57,7 +46,7 @@ router.post('/register', function(req, res) {
         res.status(201).json({Status: 'Registration success'});
       }
   });
-}
+
 });
 
 
