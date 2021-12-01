@@ -33,8 +33,8 @@ const orders = {
     },
 
     addOrderDetails: function(orderId, ShoppingCart, callback) {
-        return db.query("insert into order_details (orders_idorders, product_name, product_cost, product_amount) values ?", [ShoppingCart.map(item => [orderId, item.product_name, item.product_cost,
-            item.product_amount])], callback);
+        return db.query("insert into order_details (orders_idorders, product_name, product_cost, product_amount) values ?", [ShoppingCart.map(item => [orderId, item.value, item.cost,
+            item.qty])], callback);
     }
 }
 
