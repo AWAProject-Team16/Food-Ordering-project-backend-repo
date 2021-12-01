@@ -32,6 +32,12 @@ const products = {
         where idproducts =? AND categories_idcategories = ? AND users_idusers=?", [info.name, info.description, info.cost, info.image, productId, categoryId, userId], callback);
     },
 
+    editProductNoCategory: function(userId, productId, info, callback) {
+        return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories JOIN restaurants ON\
+        categories.restaurants_idrestaurants = restaurants.idrestaurants set product_name=?, product_description=?, product_cost=?, product_image=? \
+        where idproducts =? AND users_idusers=?", [info.name, info.description, info.cost, info.image, productId, userId], callback);
+    },
+
 
     deleteProduct: function(userId, categoryId, productId, callback) {
         return db.query('delete products from products JOIN categories ON products.categories_idcategories = categories.idcategories \

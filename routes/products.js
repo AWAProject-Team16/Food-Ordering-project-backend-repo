@@ -123,6 +123,29 @@ function(req, res) {
     });
 });
 
+
+
+// New version of product editing
+router.post('/:product_id/editProduct', passport.authenticate('jwt', { session: false }),
+function(req, res) {
+  products.editProductNoCategory(req.user.user, req.params.product_id, req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.status(500).json(err);
+      }
+      else {
+        if(dbResult.affectedRows == 0) {
+          res.status(400).json({"Status": 400 + ", Something wrong with product modifying. Try again or contact the IT-manager"});
+        }
+        else {
+          res.status(200).json({"Status": 200 + ", Product changed"});
+        }
+      }
+    });
+});
+
+
+
 // Removes the product from the selected category with productId. If not your own created product, product deletion is not possible.
 router.delete('/category/:category_id/product/:product_id/deleteProduct', passport.authenticate('jwt', { session: false }),
 function(req, res) {
