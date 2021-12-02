@@ -33,6 +33,15 @@ const restaurants = {
     info.price, info.description, info.phone, userId, restaurantId], callback);
   },
 
+  //Added by Thuc
+  editRestaurantMultipart: function(userId, restaurantId, info, callback) {
+    return db.query("update restaurants set name=?, address=?, operating_hours=?, image=?, restaurant_type=?,\
+    price_level=?,restaurant_description=?, phonenumber=? where users_idusers=? AND idrestaurants=?",
+    [info.name, info.address, info.operating_hours, info.image, info.restaurant_type,
+    info.price_level, info.restaurant_description, info.phonenumber, userId, restaurantId],
+    callback);
+  },
+
   deleteRestaurant: function(userId, restaurantId, callback) {
     return db.query("delete from restaurants where users_idusers=? AND idrestaurants=?", [userId, restaurantId], callback);
   },
