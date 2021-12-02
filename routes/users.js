@@ -4,7 +4,6 @@ const users = require('../models/users');
 
 const passport = require('passport');
 const Strategy = require('../lib/passportAuth.js');
-
 const db = require('../lib/database.js');
 
 const cors = require('cors');
@@ -21,14 +20,12 @@ router.use(passport.initialize());
 require('dotenv').config();
 let jwtSecretKeyLogin = process.env.secret;
 router.post('/login', passport.authenticate('basic', {session: false}), (req, res) => {
-  
 
 
   const payload = {
-    user : req.user,
+    user : req.user.user,
+    type : req.user.account_type
   };
-
-  console.log(payload);
 
   const options = {
   };
