@@ -9,19 +9,7 @@ router.use(bodyParser.json());
 router.use(cors())
 router.use(passport.initialize());
 
-const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
-const path = require("path");
-
-const storage = multer.diskStorage({
-  destination: "public/images",
-  filename: (req, file, callback) => {
-    callback(null, uuidv4() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
-
+upload = require('../lib/handleImages');
 
 // Get all restaurants. Works
 router.get('/', 
@@ -124,8 +112,6 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   upload.single('image'),
   function(req, res) {
-    console.log("req.file", req.file);
-    console.log("req.body", req.body);
     const restaurantInfo = { ...req.body };
     restaurantInfo.image = req.file.filename;
     restaurants.createRestaurant(req.user.user, restaurantInfo,
@@ -170,6 +156,35 @@ router.post('/:restaurant_id/editRestaurant', passport.authenticate('jwt', {sess
     });
   }
  });
+
+ // Modifies selected restaurant by restaurantId (with image)
+router.post(
+  '/:restaurant_id/editRestaurantMultipart',
+  passport.authenticate('jwt', {session: false}),
+  upload.single('image'),
+  function(req, res) {
+    if(req.body.name.length < 3)
+    {
+      res.status(200).json({'Status': 200 + ', Restaurant name too small. Minimum 3 symbols'});
+    }
+
+    else {
+    restaurants.editRestaurant(req.user.user, req.params.restaurant_id, req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.status(500).json(err);
+      }
+      else {
+        if(dbResult.affectedRows == 0) {
+          res.status(200).json({'Status': 200 + ', Something wrong with restaurant updating. Try again or contact the IT-manager'});
+        }
+        else {
+          res.status(201).json({'Status': 200 + ", Restaurant '"+req.body.name+"' changed"});
+        }
+      }
+    });
+    }
+  });
 
 // Removes the restaurant by restaurantId. If not your own restaurant, restaurant deletion is not possible. Works
 router.delete('/:restaurant_id/deleteRestaurant', passport.authenticate('jwt', {session: false}),
