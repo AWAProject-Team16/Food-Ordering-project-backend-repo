@@ -3,7 +3,7 @@ const db = require('../lib/database');
 const restaurants = {
 
   allRestaurants: function(callback) {
-    return db.query("select idrestaurants, users_idusers, image, name, address, restaurant_type, operating_hours, price_level, restaurants_description, phonenumber from restaurants", callback);
+    return db.query("select idrestaurants, users_idusers, image, name, address, restaurant_type, operating_hours, price_level, restaurant_description, phonenumber from restaurants", callback);
   },
   
   getRestaurantById: function(id, callback) {
