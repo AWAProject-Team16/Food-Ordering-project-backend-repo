@@ -9,6 +9,19 @@ router.use(bodyParser.json());
 router.use(cors())
 router.use(passport.initialize());
 
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: "public/images",
+  filename: (req, file, callback) => {
+    callback(null, uuidv4() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
 
 // Get all restaurants. Works
 router.get('/', 
@@ -92,6 +105,33 @@ router.post('/newRestaurant', passport.authenticate('jwt', { session: false }),
     restaurants.createRestaurant(req.user.user, req.body,
     function(err, dbResult) {
       if(err) {
+        res.status(500).json(err);
+      }
+      else {
+        if(dbResult.affectedRows == 0) {
+          res.status(200).send({Status: 404 + ", Something wrong with new restaurant creating. Try again or contact the IT-manager"});
+        }
+        else {
+          res.status(201).json({'Status': 201 + ', New restaurant created'});
+        }
+      }
+    });
+});
+
+// Creates new restaurant with image
+router.post(
+  '/newRestaurantMultipart',
+  passport.authenticate('jwt', { session: false }),
+  upload.single('image'),
+  function(req, res) {
+    console.log("req.file", req.file);
+    console.log("req.body", req.body);
+    const restaurantInfo = { ...req.body };
+    restaurantInfo.image = req.file.filename;
+    restaurants.createRestaurant(req.user.user, restaurantInfo,
+    function(err, dbResult) {
+      if(err) {
+        console.error(err)
         res.status(500).json(err);
       }
       else {
