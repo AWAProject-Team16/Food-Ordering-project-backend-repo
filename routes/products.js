@@ -9,6 +9,7 @@ router.use(bodyParser.json());
 router.use(cors())
 router.use(passport.initialize());
 
+const upload = require('../lib/handleImages');
 
 // Gets all restaurant products. Works
 router.get('/restaurant/:idrestaurants',
@@ -104,6 +105,67 @@ function(req, res) {
   });
 });
 
+// Adds a product to the selected category by categoryId (with image). Added by Thuc
+router.post(
+  "/category/:category_id/addProductMultipart",
+  passport.authenticate("jwt", { session: false }),
+  upload.single('product_image'),
+  function (req, res) {
+    products.checkPermissions(
+      req.user.user,
+      req.params.category_id,
+      function (err, dbResult) {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          try {
+            if (dbResult[0]["account_type"] == 2) {
+              if (dbResult[0]["idcategories"] == req.params.category_id) {
+                const productInfo = {...req.body};
+                productInfo.product_image = req.file.filename;
+                
+                products.addProductMultipart(
+                  req.params.category_id,
+                  productInfo,
+                  function (err, dbResult) {
+                    if (err) {
+                      res.status(500).json(err);
+                    } else {
+                      if (dbResult.affectedRows == 0) {
+                        res
+                          .status(400)
+                          .json({
+                            Status:
+                              400 +
+                              ", Something wrong with adding product in category with this id: " +
+                              req.params.category_id +
+                              ". Try again or contact the IT-manager",
+                          });
+                      } else {
+                        res
+                          .status(201)
+                          .json({ Status: 201 + ", Product added" });
+                      }
+                    }
+                  }
+                );
+              }
+            }
+          } catch {
+            res
+              .status(400)
+              .json({
+                Status:
+                  400 +
+                  ", No permissions for adding product in this category. For help, contact the IT-manager",
+              });
+          }
+        }
+      }
+    );
+  }
+);
+
 // Modifies product information by productId and categoryId. If the account does not have permission to do so, the product cannot be changed. Works
 router.post('/category/:category_id/product/:product_id/editProduct', passport.authenticate('jwt', { session: false }),
 function(req, res) {
@@ -143,6 +205,34 @@ function(req, res) {
       }
     });
 });
+
+
+
+// Modifies product information by productId (with image). Added by Thuc
+router.post(
+  '/:product_id/editProductMultipart', 
+  passport.authenticate('jwt', { session: false }),
+  upload.single('product_image'),
+  function(req, res) {
+    const productInfo = {...req.body};
+    productInfo.product_image = req.file.filename;
+
+    products.editProductNoCategoryMultipart(req.user.idusers, req.params.product_id, productInfo,
+      function(err, dbResult) {
+        if(err) {
+          res.status(500).json(err);
+        }
+        else {
+          if(dbResult.affectedRows == 0) {
+            res.status(400).json({"Status": 400 + ", Something wrong with product modifying. Try again or contact the IT-manager"});
+          }
+          else {
+            res.status(200).json({"Status": 200 + ", Product changed"});
+          }
+        }
+      });
+  }
+);
 
 
 

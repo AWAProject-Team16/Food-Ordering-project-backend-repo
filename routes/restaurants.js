@@ -9,7 +9,7 @@ router.use(bodyParser.json());
 router.use(cors())
 router.use(passport.initialize());
 
-upload = require('../lib/handleImages');
+const upload = require('../lib/handleImages');
 
 // Get all restaurants. Works
 router.get('/', 
