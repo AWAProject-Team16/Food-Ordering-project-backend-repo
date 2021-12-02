@@ -26,6 +26,12 @@ const products = {
         [categoryId, info.name, info.description, info.cost, info.image], callback);
     },
 
+    // Added by Thuc
+    addProductMultipart: function(categoryId, info, callback) {
+        return db.query('insert into products (categories_idcategories, product_name, product_description, product_cost, product_image) values (?,?,?,?,?)',
+        [categoryId, info.product_name, info.product_description, info.product_cost, info.product_image], callback);
+    },
+
     editProduct: function(userId, categoryId, productId, info, callback) {
         return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories JOIN restaurants ON\
         categories.restaurants_idrestaurants = restaurants.idrestaurants set product_name=?, product_description=?, product_cost=?, product_image=? \
@@ -36,6 +42,13 @@ const products = {
         return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories JOIN restaurants ON\
         categories.restaurants_idrestaurants = restaurants.idrestaurants set product_name=?, product_description=?, product_cost=?, product_image=? \
         where idproducts =? AND users_idusers=?", [info.name, info.description, info.cost, info.image, productId, userId], callback);
+    },
+
+    // Added by Thuc
+    editProductNoCategoryMultipart: function(userId, productId, info, callback) {
+        return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories JOIN restaurants ON\
+        categories.restaurants_idrestaurants = restaurants.idrestaurants set product_name=?, product_description=?, product_cost=?, product_image=? \
+        where idproducts =? AND users_idusers=?", [info.product_name, info.product_description, info.product_cost, info.product_image, productId, userId], callback);
     },
 
 
