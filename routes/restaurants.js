@@ -106,7 +106,7 @@ router.post('/newRestaurant', passport.authenticate('jwt', { session: false }),
     });
 });
 
-// Creates new restaurant with image
+// Creates new restaurant with image. Added by Thuc
 router.post(
   '/newRestaurantMultipart',
   passport.authenticate('jwt', { session: false }),
@@ -114,7 +114,7 @@ router.post(
   function(req, res) {
     const restaurantInfo = { ...req.body };
     restaurantInfo.image = req.file.filename;
-    restaurants.createRestaurant(req.user.user, restaurantInfo,
+    restaurants.createRestaurant(req.user.idusers, restaurantInfo,
     function(err, dbResult) {
       if(err) {
         console.error(err)
@@ -157,7 +157,7 @@ router.post('/:restaurant_id/editRestaurant', passport.authenticate('jwt', {sess
   }
  });
 
- // Modifies selected restaurant by restaurantId (with image)
+ // Modifies selected restaurant by restaurantId (with image). Added by Thuc
 router.post(
   '/:restaurant_id/editRestaurantMultipart',
   passport.authenticate('jwt', {session: false}),
@@ -169,7 +169,7 @@ router.post(
     }
 
     else {
-    restaurants.editRestaurant(req.user.user, req.params.restaurant_id, req.body,
+    restaurants.editRestaurant(req.user.idusers, req.params.restaurant_id, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
