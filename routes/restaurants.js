@@ -9,6 +9,7 @@ router.use(bodyParser.json());
 router.use(cors())
 router.use(passport.initialize());
 
+upload = require('../lib/handleImages');
 
 // Get all restaurants. Works
 router.get('/', 
@@ -105,6 +106,31 @@ router.post('/newRestaurant', passport.authenticate('jwt', { session: false }),
     });
 });
 
+// Creates new restaurant with image. Added by Thuc
+router.post(
+  '/newRestaurantMultipart',
+  passport.authenticate('jwt', { session: false }),
+  upload.single('image'),
+  function(req, res) {
+    const restaurantInfo = { ...req.body };
+    restaurantInfo.image = req.file.filename;
+    restaurants.createRestaurant(req.user.idusers, restaurantInfo,
+    function(err, dbResult) {
+      if(err) {
+        console.error(err)
+        res.status(500).json(err);
+      }
+      else {
+        if(dbResult.affectedRows == 0) {
+          res.status(200).send({Status: 404 + ", Something wrong with new restaurant creating. Try again or contact the IT-manager"});
+        }
+        else {
+          res.status(201).json({'Status': 201 + ', New restaurant created'});
+        }
+      }
+    });
+});
+
 // Modifies selected restaurant by restaurantId. If the account does not have permission to do so, the restaurant cannot be changed. Works
 router.post('/:restaurant_id/editRestaurant', passport.authenticate('jwt', {session: false}),
  function(req, res) {
@@ -130,6 +156,35 @@ router.post('/:restaurant_id/editRestaurant', passport.authenticate('jwt', {sess
     });
   }
  });
+
+ // Modifies selected restaurant by restaurantId (with image). Added by Thuc
+router.post(
+  '/:restaurant_id/editRestaurantMultipart',
+  passport.authenticate('jwt', {session: false}),
+  upload.single('image'),
+  function(req, res) {
+    if(req.body.name.length < 3)
+    {
+      res.status(200).json({'Status': 200 + ', Restaurant name too small. Minimum 3 symbols'});
+    }
+
+    else {
+    restaurants.editRestaurant(req.user.idusers, req.params.restaurant_id, req.body,
+    function(err, dbResult) {
+      if(err) {
+        res.status(500).json(err);
+      }
+      else {
+        if(dbResult.affectedRows == 0) {
+          res.status(200).json({'Status': 200 + ', Something wrong with restaurant updating. Try again or contact the IT-manager'});
+        }
+        else {
+          res.status(201).json({'Status': 200 + ", Restaurant '"+req.body.name+"' changed"});
+        }
+      }
+    });
+    }
+  });
 
 // Removes the restaurant by restaurantId. If not your own restaurant, restaurant deletion is not possible. Works
 router.delete('/:restaurant_id/deleteRestaurant', passport.authenticate('jwt', {session: false}),
