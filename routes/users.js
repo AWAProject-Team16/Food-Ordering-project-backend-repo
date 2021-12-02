@@ -23,13 +23,13 @@ router.post('/login', passport.authenticate('basic', {session: false}), (req, re
 
 
   const payload = {
-    user : req.user.user,
-    type : req.user.account_type
+    idusers : req.user.user,
+    account_type : req.user.account_type
   };
 
   const options = {
   };
-
+  
   const token = jwt.sign(payload, jwtSecretKeyLogin, options);
   res.json({ token });
 
