@@ -67,6 +67,63 @@ function(req, res) {
   });
 });
 
+// Added by Thuc
+// Adds a category to the selected restaurant by restaurantId. If the account does not have permission to do so, the category is not added to the restaurant. Works
+router.post(
+  "/restaurant/:restaurant_id/addCategory2",
+  passport.authenticate("jwt", { session: false }),
+  function (req, res) {
+    categories.checkPermissions(
+      req.user.idusers,
+      req.params.restaurant_id,
+      function (err, dbResult) {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          try {
+            if (dbResult[0]["account_type"] == 2) {
+              if (dbResult[0]["idrestaurants"] == req.params.restaurant_id) {
+                console.log('req.body', req.body)
+                categories.addCategory(
+                  req.params.restaurant_id,
+                  req.body,
+                  function (err, dbResult) {
+                    if (err) {
+                      res.status(500).json(err);
+                    } else {
+                      if (dbResult.affectedRows == 0) {
+                        res
+                          .status(400)
+                          .json({
+                            Status:
+                              400 +
+                              ", Something is wrong with adding a category to the restaurant. Try again or contact the IT manager",
+                          });
+                      } else {
+                        res
+                          .status(201)
+                          .json({ Status: 201 + ", Category added" });
+                      }
+                    }
+                  }
+                );
+              }
+            }
+          } catch {
+            res
+              .status(400)
+              .json({
+                Status:
+                  400 +
+                  ", You have no permission to add categories to this restaurant. For help, contact the IT manager",
+              });
+          }
+        }
+      }
+    );
+  }
+);
+
 // Rename a category from the selected restaurant. If the account does not have permission to do so, the category cannot be renamed. Works
 router.post('/restaurant/:restaurant_id/category/:category_id/renameCategory', passport.authenticate('jwt', { session: false }),
 function(req, res) {
