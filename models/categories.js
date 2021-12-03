@@ -23,7 +23,6 @@ const categories = {
         where idcategories = ? AND restaurants_idrestaurants=? AND users_idusers=?', [info.name, categoryId, restaurantId, userId], callback);
     },
 
-    // ON DELETE CASCADE
     deleteCategory: function(userId, restaurantId, categoryId, callback) {
         return db.query('delete categories from categories JOIN restaurants ON categories.restaurants_idrestaurants = restaurants.idrestaurants \
         where idcategories = ? AND restaurants_idrestaurants=? AND users_idusers=?', [categoryId, restaurantId, userId], callback);

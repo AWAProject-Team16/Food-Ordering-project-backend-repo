@@ -71,7 +71,7 @@ function(req, res) {
 
 // Get all user restaurants who authenticated and have account_type = 2. But if account_type != 2, then get same error message thats manager get (Own restaurants not found)
 router.get('/ownRestaurants', passport.authenticate('jwt', { session: false }), (req, res) => {
-    restaurants.getManagerRestaurants(req.user.user,
+    restaurants.getManagerRestaurants(req.user.idusers,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -90,7 +90,7 @@ router.get('/ownRestaurants', passport.authenticate('jwt', { session: false }), 
 // Creates new restaurant. Without checking account_type from selected user. Not yet done
 router.post('/newRestaurant', passport.authenticate('jwt', { session: false }),
   function(req, res) {
-    restaurants.createRestaurant(req.user.user, req.body,
+    restaurants.createRestaurant(req.user.idusers, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -148,7 +148,7 @@ router.post('/:restaurant_id/editRestaurant', passport.authenticate('jwt', {sess
    }
 
    else {
-   restaurants.editRestaurant(req.user.user, req.params.restaurant_id, req.body,
+   restaurants.editRestaurant(req.user.idusers, req.params.restaurant_id, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -214,7 +214,7 @@ router.post(
 // Removes the restaurant by restaurantId. If not your own restaurant, restaurant deletion is not possible. Works
 router.delete('/:restaurant_id/deleteRestaurant', passport.authenticate('jwt', {session: false}),
   function(req, res) {
-    restaurants.deleteRestaurant(req.user.user, req.params.restaurant_id,
+    restaurants.deleteRestaurant(req.user.idusers, req.params.restaurant_id,
       function(err, dbResult) {
         if(err) {
           res.status(500).json(err);

@@ -29,12 +29,23 @@ const orders = {
 
     addOrder: function(userId, info, callback) { 
         return db.query("insert into orders (restaurants_idrestaurants, users_idusers, order_date, order_delivery_location, \
-        order_status, order_total_cost) values (?,?,?,?,?,?)", [info.restaurants_idrestaurants, userId, info.order_date, info.order_delivery_location, info.order_status, info.order_total_cost], callback);
+        order_status, order_total_cost) values (?,?,now(),?,?,?)", [info.restaurants_idrestaurants, userId, info.order_delivery_location, info.order_status, info.order_total_cost], callback);
     },
 
     addOrderDetails: function(orderId, ShoppingCart, callback) {
         return db.query("insert into order_details (orders_idorders, product_name, product_cost, product_amount) values ?", [ShoppingCart.map(item => [orderId, item.value, item.cost,
             item.qty])], callback);
+    },
+
+
+    checkOrderStatus: function(userId, info, callback) {
+        return db.query("Select order_status from orders join restaurants on orders.restaurants_idrestaurants = restaurants.idrestaurants where idorders = ? \
+        AND restaurants.users_idusers = ?", [info.idorders, userId], callback);
+    },
+
+    updateOrder: function(userId, info, callback) {
+            return db.query("Update orders Join restaurants on orders.restaurants_idrestaurants = restaurants.idrestaurants set order_status = ? \
+            where orders.idorders = ? AND restaurants.users_idusers = ?", [info.order_status, info.idorders, userId], callback);
     }
 }
 

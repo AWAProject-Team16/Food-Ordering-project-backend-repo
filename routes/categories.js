@@ -33,7 +33,7 @@ function(req, res) {
 // Adds a category to the selected restaurant by restaurantId. If the account does not have permission to do so, the category is not added to the restaurant. Works
 router.post('/restaurant/:restaurant_id/addCategory', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  categories.checkPermissions(req.user.user, req.params.restaurant_id,
+  categories.checkPermissions(req.user.idusers, req.params.restaurant_id,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -70,7 +70,7 @@ function(req, res) {
 // Rename a category from the selected restaurant. If the account does not have permission to do so, the category cannot be renamed. Works
 router.post('/restaurant/:restaurant_id/category/:category_id/renameCategory', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  categories.renameCategory(req.user.user, req.params.restaurant_id, req.params.category_id, req.body,
+  categories.renameCategory(req.user.idusers, req.params.restaurant_id, req.params.category_id, req.body,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
@@ -89,7 +89,7 @@ function(req, res) {
 // Removes the category from the selected restaurant with categoryId. If not your own restaurant, category deletion is not possible. Works
 router.delete('/restaurant/:restaurant_id/category/:category_id/deleteCategory', passport.authenticate('jwt', { session: false }),
 function(req, res) {
-  categories.deleteCategory(req.user.user, req.params.restaurant_id, req.params.category_id,
+  categories.deleteCategory(req.user.idusers, req.params.restaurant_id, req.params.category_id,
     function(err, dbResult) {
       if(err) {
         res.status(500).json(err);
