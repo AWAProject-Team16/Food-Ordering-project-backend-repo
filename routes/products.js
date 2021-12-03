@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const products = require('../models/products');
-const passport = require('passport');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const products = require("../models/products");
+const passport = require("passport");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 router.use(bodyParser.json());
-router.use(cors())
+router.use(cors());
 router.use(passport.initialize());
 
-const upload = require('../lib/handleImages');
+const upload = require("../lib/handleImages");
 
 // Gets all restaurant products. Works
 router.get('/restaurant/:idrestaurants',
@@ -32,18 +32,18 @@ function(req, res) {
 })
 
 // Gets product by productId. Works
-router.get('/product/:product_id', 
-function(req, res) {
-  products.getProductById(req.params.product_id,
-  function(err, dbResult){
-    if(err) {
+router.get("/product/:product_id", function (req, res) {
+  products.getProductById(req.params.product_id, function (err, dbResult) {
+    if (err) {
       res.status(500).json(err);
-    }
-    else {
-      if(dbResult == '') {
-        res.status(400).json({"Status": 400 + ", No product with this id: "+req.params.product_id});
-      }
-      else {
+    } else {
+      if (dbResult == "") {
+        res
+          .status(400)
+          .json({
+            Status: 400 + ", No product with this id: " + req.params.product_id,
+          });
+      } else {
         res.status(200).json(dbResult);
       }
     }

@@ -87,6 +87,26 @@ router.get('/ownRestaurants', passport.authenticate('jwt', { session: false }), 
     });
 });
 
+// Added by Thuc
+// Get all user restaurants who authenticated and have account_type = 2. But if account_type != 2, then get same error message thats manager get (Own restaurants not found)
+router.get(
+  "/ownRestaurants2",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    restaurants.getManagerRestaurants(req.user.idusers, function (err, dbResult) {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        if (dbResult == "") {
+          res.status(404).send({ Status: 404 + ", Own restaurants not found" });
+        } else {
+          res.status(200).json({ Own_Restaurants: dbResult });
+        }
+      }
+    });
+  }
+);
+
 // Creates new restaurant. Without checking account_type from selected user. Not yet done
 router.post('/newRestaurant', passport.authenticate('jwt', { session: false }),
   function(req, res) {
