@@ -28,6 +28,15 @@ const categories = {
         where idcategories = ? AND restaurants_idrestaurants=? AND users_idusers=?', [categoryId, restaurantId, userId], callback);
     },
 
+    // Added by Thuc
+    getCategoryWithRestaurantNameByCategoryId: function (idusers, idcategories, callback) {
+        return db.query('SELECT categories.*, restaurants.name as restaurant_name FROM categories INNER JOIN restaurants \
+        ON categories.restaurants_idrestaurants = restaurants.idrestaurants \
+        WHERE users_idusers = ? AND idcategories = ?',
+        [idusers, idcategories],
+        callback);
+    },
+
 }
 
 module.exports = categories;
