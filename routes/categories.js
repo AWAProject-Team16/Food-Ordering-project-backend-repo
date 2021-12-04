@@ -161,4 +161,21 @@ function(req, res) {
       }
     });
 });
+
+// Get information about a category with restaurant name. Not found or lack of permissions = empty array returned. Added by Thuc
+router.get(
+  "/categoryInfoWithRestaurantName/:category_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    categories.getCategoryWithRestaurantNameByCategoryId(
+      req.user.idusers,
+      req.params.category_id,
+      (err, dbResult) => {
+        if (err) console.error;
+        else res.json(dbResult);
+      }
+    );
+  }
+);
+
 module.exports = router;
