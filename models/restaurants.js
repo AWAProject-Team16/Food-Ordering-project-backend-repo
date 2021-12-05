@@ -24,7 +24,7 @@ const restaurants = {
     return db.query("insert into restaurants (name, address, image, \
     restaurant_type, operating_hours, price_level, restaurant_description, phonenumber, users_idusers) VALUES (?,?,?,?,?,?,?,?,?)",
     [settings.name, settings.address, settings.image, settings.restaurant_type, 
-     settings.operating_hours, settings.price_level, settings.restaurant_description, settings.phone, id], callback);
+     settings.operating_hours, settings.price_level, settings.restaurant_description, settings.phonenumber, id], callback);
   },
   
   editRestaurant: function(userId, restaurantId, info, callback) {
