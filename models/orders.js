@@ -9,6 +9,33 @@ const orders = {
 
 
 
+    // Get orders for current user. Added by Thuc
+    getMyOrdersPlusNames: function(userObj, callback) {
+        if(userObj.account_type == 1){  // customer
+            return db.query("select orders.*, restaurants.name as restaurant_name, users.name as customer_name \
+            from orders inner join restaurants \
+            on orders.restaurants_idrestaurants = restaurants.idrestaurants \
+            inner join users on users.idusers = orders.users_idusers \
+            where orders.users_idusers = ? \
+            order by orders.idorders desc",
+            [userObj.idusers],
+            callback);
+        }
+        else {  // manager
+            return db.query("select orders.*, restaurants.name as restaurant_name, users.name as customer_name \
+            from orders inner join restaurants \
+            on orders.restaurants_idrestaurants = restaurants.idrestaurants \
+            inner join users on users.idusers = orders.users_idusers \
+            inner join users users2 on users2.idusers = restaurants.users_idusers \
+            where users2.idusers = ? \
+            order by orders.idorders desc",
+            [userObj.idusers],
+            callback);
+        }
+    },
+
+
+
     getOrderDetails: function(userId, orderId, callback) {
         return db.query("select product_name, product_cost, product_amount from order_details JOIN orders ON order_details.orders_idorders = orders.idorders \
         where orders.users_idusers = ? AND orders_idorders = ?", [userId, orderId], callback);
@@ -46,7 +73,16 @@ const orders = {
     updateOrder: function(userId, info, callback) {
             return db.query("Update orders Join restaurants on orders.restaurants_idrestaurants = restaurants.idrestaurants set order_status = ? \
             where orders.idorders = ? AND restaurants.users_idusers = ?", [info.order_status, info.idorders, userId], callback);
-    }
+    },
+
+    // Added by Thuc
+    updateOrderStatusAndETC: function(userId, info, callback) {
+        return db.query("Update orders Join restaurants on orders.restaurants_idrestaurants = restaurants.idrestaurants \
+        set order_status = ?, order_status_extra_info = ? \
+        where orders.idorders = ? AND restaurants.users_idusers = ?",
+        [info.order_status, info.order_status_extra_info, info.idorders, userId],
+        callback);
+}
 }
 
 module.exports = orders;
