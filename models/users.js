@@ -13,7 +13,12 @@ const users = {
     });
  
     
-}
+},
+
+  getUserById(id, callback) {
+    return db.query('select idusers, username, name, address, email, account_type, phonenumber from users \
+    where idusers=?', [id], callback);
+  }
 
 
 }

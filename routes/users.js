@@ -52,4 +52,16 @@ router.post('/register', function(req, res) {
 });
 
 
+// Get user information by id. Added by Thuc
+router.get('/myinfo', passport.authenticate('jwt', {session: false}), (req, res) => {
+  users.getUserById(req.user.idusers, (err,dbResult)=>{
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+    else res.json(dbResult);
+  })
+})
+
+
 module.exports = router;

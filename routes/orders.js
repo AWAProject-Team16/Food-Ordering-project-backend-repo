@@ -30,6 +30,25 @@ function(req, res) {
     });
 });
 
+// Get orders for a customer or manager. Added by Thuc
+router.get(
+  "/myOrdersPlusNames",
+  passport.authenticate("jwt", { session: false }),
+  function (req, res) {
+    orders.getMyOrdersPlusNames(
+      req.user,
+      function (err, dbResult) {
+        if (err) {
+          console.error(err);
+          res.sendStatus(500);
+        } else {
+          res.json(dbResult);
+        }
+      }
+    );
+  }
+);
+
 // Gets order details (what products was ordered and its' costs)
 router.post('/orderId/:idorders', passport.authenticate('jwt', { session: false }),
 function(req, res) {
@@ -124,6 +143,60 @@ function(req, res) {
             });
         }}});
     });
+
+// Update order status and estimated time of completion. Added by Thuc
+router.post(
+  "/updateOrderStatusAndETC",
+  passport.authenticate("jwt", { session: false }),
+  function (req, res) {
+    orders.checkOrderStatus(
+      req.user.idusers,
+      req.body,
+      function (err, dbResult) {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          if (dbResult[0]["order_status"] == "Closed") {
+            res
+              .status(400)
+              .json({
+                Status:
+                  400 +
+                  ", This order cannot be updated because the order is closed. For help, contact the IT manager",
+              });
+          } else {
+            orders.updateOrderStatusAndETC(
+              req.user.idusers,
+              req.body,
+              function (err, dbResult) {
+                if (err) {
+                  res.status(500).json(err);
+                } else {
+                  if (dbResult.affectedRows == 0) {
+                    res
+                      .status(400)
+                      .json({
+                        Status:
+                          400 +
+                          ", Cannot update order. For help, contact the IT manager",
+                      });
+                  } else {
+                    res
+                      .status(200)
+                      .json({
+                        Status:
+                          200 + ", Order updated to: " + req.body.order_status,
+                      });
+                  }
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  }
+);
   
 
 module.exports = router;
