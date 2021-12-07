@@ -46,9 +46,21 @@ const products = {
 
     // Added by Thuc
     editProductNoCategoryMultipart: function(userId, productId, info, callback) {
-        return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories JOIN restaurants ON\
-        categories.restaurants_idrestaurants = restaurants.idrestaurants set product_name=?, product_description=?, product_cost=?, product_image=? \
-        where idproducts =? AND users_idusers=?", [info.product_name, info.product_description, info.product_cost, info.product_image, productId, userId], callback);
+        if (info.product_image){
+            return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories \
+                    JOIN restaurants ON categories.restaurants_idrestaurants = restaurants.idrestaurants \
+                    set product_name=?, product_description=?, product_cost=?, product_image=? \
+                    where idproducts =? AND users_idusers=?",
+                    [info.product_name, info.product_description, info.product_cost, info.product_image, productId, userId],
+                    callback);
+        } else {
+            return db.query("UPDATE products JOIN categories ON products.categories_idcategories = categories.idcategories \
+                    JOIN restaurants ON categories.restaurants_idrestaurants = restaurants.idrestaurants \
+                    set product_name=?, product_description=?, product_cost=? \
+                    where idproducts =? AND users_idusers=?",
+                    [info.product_name, info.product_description, info.product_cost, productId, userId],
+                    callback);
+        }
     },
 
 

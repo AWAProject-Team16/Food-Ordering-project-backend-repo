@@ -87,7 +87,7 @@ router.get('/ownRestaurants', passport.authenticate('jwt', { session: false }), 
     });
 });
 
-// Added by Thuc
+// Added by Thuc (change only req.user.user to req.user.idusers)
 // Get all user restaurants who authenticated and have account_type = 2. But if account_type != 2, then get same error message thats manager get (Own restaurants not found)
 router.get(
   "/ownRestaurants2",
@@ -133,7 +133,7 @@ router.post(
   upload.single("image"),
   function (req, res) {
     const restaurantInfo = { ...req.body };
-    restaurantInfo.image = req.file.filename;
+    if (req.file) restaurantInfo.image = req.file.filename;
     restaurants.createRestaurant(
       req.user.idusers,
       restaurantInfo,
@@ -191,43 +191,35 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   upload.single("image"),
   function (req, res) {
-    if (req.body.name.length < 3) {
-      res
-        .status(200)
-        .json({
-          Status: 200 + ", Restaurant name too small. Minimum 3 symbols",
-        });
-    } else {
-      const restaurantInfo = {...req.body};
-      restaurantInfo.image = req.file.filename;
+    const restaurantInfo = {...req.body};
+    if (req.file) restaurantInfo.image = req.file.filename;
 
-      restaurants.editRestaurantMultipart(
-        req.user.idusers,
-        req.params.restaurant_id,
-        restaurantInfo,
-        function (err, dbResult) {
-          if (err) {
-            res.status(500).json(err);
+    restaurants.editRestaurantMultipart(
+      req.user.idusers,
+      req.params.restaurant_id,
+      restaurantInfo,
+      function (err, dbResult) {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          if (dbResult.affectedRows == 0) {
+            res
+              .status(200)
+              .json({
+                Status:
+                  200 +
+                  ", Something wrong with restaurant updating. Try again or contact the IT-manager",
+              });
           } else {
-            if (dbResult.affectedRows == 0) {
-              res
-                .status(200)
-                .json({
-                  Status:
-                    200 +
-                    ", Something wrong with restaurant updating. Try again or contact the IT-manager",
-                });
-            } else {
-              res
-                .status(201)
-                .json({
-                  Status: 200 + ", Restaurant '" + req.body.name + "' changed",
-                });
-            }
+            res
+              .status(201)
+              .json({
+                Status: 200 + ", Restaurant '" + req.body.name + "' changed",
+              });
           }
         }
-      );
-    }
+      }
+    );
   }
 );
 

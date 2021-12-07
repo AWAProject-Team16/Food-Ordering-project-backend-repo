@@ -122,7 +122,7 @@ router.post(
             if (dbResult[0]["account_type"] == 2) {
               if (dbResult[0]["idcategories"] == req.params.category_id) {
                 const productInfo = {...req.body};
-                productInfo.product_image = req.file.filename;
+                if (req.file) productInfo.product_image = req.file.filename;
                 
                 products.addProductMultipart(
                   req.params.category_id,
@@ -215,7 +215,7 @@ router.post(
   upload.single('product_image'),
   function(req, res) {
     const productInfo = {...req.body};
-    productInfo.product_image = req.file.filename;
+    if (req.file) productInfo.product_image = req.file.filename;
 
     products.editProductNoCategoryMultipart(req.user.idusers, req.params.product_id, productInfo,
       function(err, dbResult) {
