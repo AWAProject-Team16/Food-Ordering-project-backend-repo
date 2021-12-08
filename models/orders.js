@@ -56,7 +56,8 @@ const orders = {
 
     addOrder: function(userId, info, callback) { 
         return db.query("insert into orders (restaurants_idrestaurants, users_idusers, order_date, order_delivery_location, \
-        order_status, order_total_cost) values (?,?,now(),?,?,?)", [info.restaurants_idrestaurants, userId, info.order_delivery_location, info.order_status, info.order_total_cost], callback);
+        order_status, order_total_cost) values (?,?,now(),?,?,?)", 
+        [info.restaurants_idrestaurants, userId, info.order_delivery_location, "Received", info.order_total_cost], callback);
     },
 
     addOrderDetails: function(orderId, ShoppingCart, callback) {
