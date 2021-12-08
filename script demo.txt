@@ -1,0 +1,24 @@
+INSERT INTO restaurants (users_idusers, `name`, address, operating_hours, image, restaurant_type, price_level, restaurant_description, phonenumber) VALUES
+				(1, 'Mac DN BG', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp01.png', 'Burger', 5, 'Better place for burger and fastfood', '12345678'),
+				(1, 'King BG', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp02.png', 'Burger', 6, 'Better place for burger and fastfood', '12345678'),
+				(1, 'Itsu DM', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp03.png', 'Suhsi', 7, 'Better place for sushi', '12345678'),
+				(1, 'Hai LO', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp04.png', 'Sushi', 8, 'Better place for sushi', '12345678'),
+				(1, 'Royal GA', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp05.png', 'Chinese', 9, 'Better place for sushi Chinese food', '12345678'),
+				(1, 'Taco BO', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp06.png', 'Mexican', 10, 'Better place for sushi Mexican food', '12345678'),
+				(1, 'Pizzeria La', 'Yliopistokatu 9, 90570 OULU 90570 Oulu', '8AM - 20PM', 'sp07.png', 'Pizza', 8, 'Better place for pizza', '12345678');
+SELECT * FROM restaurants;
+-- --------------------------------------------------
+INSERT INTO categories (restaurants_idrestaurants, category_name) VALUES
+				(1, "Breakfast"),
+				(1, "Lunch"),
+                		(1, "Dinner"),
+				(2, "Dinner");
+SELECT * FROM categories;
+-- --------------------------------------------------              
+INSERT INTO products (categories_idcategories, product_name, product_description, product_cost, product_image) VALUES
+				(1, "Bread", "product_description of it", 1, "p1.png"),
+				(2, "Mini buffet", "product_description of it", 2, "p2.png"),
+				(3, "Suop, salat", "product_description of it", 3, "p3.png"),
+				(4, "Suop, salat", "product_description of it", 4, "p3.png"),
+				(1, "Noodle", "product_description of it", 5, "p5.png");
+SELECT * FROM products;
