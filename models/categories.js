@@ -13,6 +13,18 @@ const categories = {
     );
   },
 
+  getMyCategories: function (userId, callback) {
+    return db.query(
+      "select c.*, r.name as restaurant_name \
+      from categories c inner join restaurants r on c.restaurants_idrestaurants = r.idrestaurants \
+      inner join users u on r.users_idusers = u.idusers \
+      where u.idusers = ? \
+      order by c.category_name",
+      [userId],
+      callback
+    );
+  },
+
   checkPermissions: function (userId, restaurantId, callback) {
     return db.query(
       "select account_type, restaurants.idrestaurants from users JOIN restaurants ON users.idusers = restaurants.users_idusers where idusers = ? AND idrestaurants = ?",

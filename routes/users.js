@@ -25,6 +25,7 @@ router.post(
     const payload = {
       idusers: req.user.user,
       account_type: req.user.account_type,
+      name: req.user.name,
     };
 
     const options = {};
@@ -54,6 +55,82 @@ router.get(
         console.error(err);
         res.sendStatus(500);
       } else res.json(dbResult);
+    });
+  }
+);
+
+// Get total revenue, total orders, total customers from all restaurants (for a manager). Customer -> return empty
+router.get(
+  "/totalRevenueOrdersCustomersForManager",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    users.getTotalRevenueOrdersCustomersForManager(
+      req.user.idusers,
+      (err, dbResult) => {
+        if (err) {
+          console.error(err);
+          res.sendStatus(500);
+        } else res.json(dbResult[0]);
+      }
+    );
+  }
+);
+
+// Most 4 popular days for manager (based on the number of orders)
+router.get(
+  "/most4PopularDaysForManager",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    users.getMost4PopularDaysForManager(req.user.idusers, (err, dbResult) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else res.json(dbResult);
+    });
+  }
+);
+
+// Most 6 popular time for manager (based on the number of orders)
+router.get(
+  "/most6PopularTimeForManager",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    users.getMost6PopularTimeForManager(req.user.idusers, (err, dbResult) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else res.json(dbResult);
+    });
+  }
+);
+
+// Most 3 popular ordered foods for manager (based on the number of orders)
+router.get(
+  "/most3PopularProductsForManager",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    users.getMost3PopularProductsForManager(
+      req.user.idusers,
+      (err, dbResult) => {
+        if (err) {
+          console.error(err);
+          res.sendStatus(500);
+        } else res.json(dbResult);
+      }
+    );
+  }
+);
+
+// Number of restaurants for manager
+router.get(
+  "/totalRestaurants",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    users.getTotalRestaurants(req.user.idusers, (err, dbResult) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else res.json(dbResult[0]);
     });
   }
 );
