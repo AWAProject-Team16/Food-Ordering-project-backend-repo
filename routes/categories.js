@@ -17,13 +17,7 @@ router.get("/restaurant/:restaurant_id", function (req, res) {
       if (err) {
         res.status(500).json(err);
       } else {
-        if (dbResult == "") {
-          res
-            .status(404)
-            .json({ Status: 404 + ", Categories in restaurant not found" });
-        } else {
-          res.status(200).json({ Categories: dbResult });
-        }
+        res.status(200).json({ Categories: dbResult });
       }
     }
   );
