@@ -1,6 +1,5 @@
 const db = require("../lib/database.js");
 
-// !!! Not done yet !!!
 const orders = {
   getUserOrders: function (userId, callback) {
     return db.query(
@@ -76,14 +75,7 @@ const orders = {
     return db.query(
       "insert into orders (restaurants_idrestaurants, users_idusers, order_date, order_delivery_location, \
         order_status, order_total_cost, order_status_extra_info) values (?,?,now(),?,?,?,?)",
-      [
-        info.restaurants_idrestaurants,
-        userId,
-        info.order_delivery_location,
-        "Received",
-        info.order_total_cost,
-        "",
-      ],
+      [info.restaurants_idrestaurants, userId, info.order_delivery_location, "Received", info.order_total_cost, ""],
       callback
     );
   },
@@ -131,6 +123,32 @@ const orders = {
       [userId, orderId],
       callback
     );
+  },
+
+  getAllLatestDates: function (callback) {
+    return db.query(
+      "select users_idusers as idusers, max(order_date) as latest from orders group by users_idusers UNION \
+       select u.idusers, max(order_date) as latest from orders o \
+         inner join restaurants r on o.restaurants_idrestaurants = r.idrestaurants \
+         inner join users u on r.users_idusers = u.idusers group by u.idusers",
+      callback
+    );
+  },
+
+  getMyLatestOrderDate: function (userObj, callback) {
+    if (userObj.account_type == 1) {
+      // customer
+      return db.query("select max(order_date) as latest_date from orders where users_idusers = ?", [userObj.idusers], callback);
+    } else {
+      // manager
+      return db.query(
+        "select max(orders.order_date) as latest_date from orders inner join restaurants on orders.restaurants_idrestaurants = restaurants.idrestaurants \
+        inner join users on users.idusers = restaurants.users_idusers \
+        where users.idusers = ?",
+        [userObj.idusers],
+        callback
+      );
+    }
   },
 };
 

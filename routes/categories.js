@@ -32,11 +32,7 @@ router.get(
       if (err) {
         res.status(500).json(err);
       } else {
-        if (dbResult == "") {
-          res.status(404).json({ Status: 404 + ", No categories found" });
-        } else {
-          res.status(200).json(dbResult);
-        }
+        res.status(200).json(dbResult);
       }
     });
   }

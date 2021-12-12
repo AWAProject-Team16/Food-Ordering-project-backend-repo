@@ -73,11 +73,7 @@ router.get(
         console.log("err");
         res.status(500).json(err);
       } else {
-        if (dbResult == "") {
-          res.status(400).json({ Status: 400 + ", No products found" });
-        } else {
-          res.status(200).json(dbResult);
-        }
+        res.status(200).json(dbResult);
       }
     });
   }

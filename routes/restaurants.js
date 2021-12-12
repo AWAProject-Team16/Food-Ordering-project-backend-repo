@@ -98,13 +98,7 @@ router.get(
         if (err) {
           res.status(500).json(err);
         } else {
-          if (dbResult == "") {
-            res
-              .status(404)
-              .send({ Status: 404 + ", Own restaurants not found" });
-          } else {
-            res.status(200).json({ Own_Restaurants: dbResult });
-          }
+          res.status(200).json({ Own_Restaurants: dbResult });
         }
       }
     );
@@ -124,13 +118,11 @@ router.post(
           res.status(500).json(err);
         } else {
           if (dbResult.affectedRows == 0) {
-            res
-              .status(200)
-              .send({
-                Status:
-                  404 +
-                  ", Something wrong with new restaurant creating. Try again or contact the IT-manager",
-              });
+            res.status(200).send({
+              Status:
+                404 +
+                ", Something wrong with new restaurant creating. Try again or contact the IT-manager",
+            });
           } else {
             res.status(201).json({ Status: 201 + ", New restaurant created" });
           }
@@ -177,11 +169,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
     if (req.body.name.length < 3) {
-      res
-        .status(200)
-        .json({
-          Status: 200 + ", Restaurant name too small. Minimum 3 symbols",
-        });
+      res.status(200).json({
+        Status: 200 + ", Restaurant name too small. Minimum 3 symbols",
+      });
     } else {
       restaurants.editRestaurant(
         req.user.idusers,
@@ -192,19 +182,15 @@ router.post(
             res.status(500).json(err);
           } else {
             if (dbResult.affectedRows == 0) {
-              res
-                .status(200)
-                .json({
-                  Status:
-                    200 +
-                    ", Something wrong with restaurant updating. Try again or contact the IT-manager",
-                });
+              res.status(200).json({
+                Status:
+                  200 +
+                  ", Something wrong with restaurant updating. Try again or contact the IT-manager",
+              });
             } else {
-              res
-                .status(201)
-                .json({
-                  Status: 200 + ", Restaurant '" + req.body.name + "' changed",
-                });
+              res.status(201).json({
+                Status: 200 + ", Restaurant '" + req.body.name + "' changed",
+              });
             }
           }
         }
@@ -260,20 +246,16 @@ router.delete(
           res.status(500).json(err);
         } else {
           if (dbResult.affectedRows == 0) {
-            res
-              .status(400)
-              .json({
-                Status:
-                  400 +
-                  ", Something wrong with restaurant deleting. Try again or contact the IT-manager",
-              });
+            res.status(400).json({
+              Status:
+                400 +
+                ", Something wrong with restaurant deleting. Try again or contact the IT-manager",
+            });
           } else {
-            res
-              .status(200)
-              .json({
-                Status:
-                  200 + ", Restaurant " + req.params.restaurant_id + " deleted",
-              });
+            res.status(200).json({
+              Status:
+                200 + ", Restaurant " + req.params.restaurant_id + " deleted",
+            });
           }
         }
       }
