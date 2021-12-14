@@ -104,6 +104,7 @@ router.post(
   function (req, res) {
     categories.renameCategory(req.user.idusers, req.params.restaurant_id, req.params.category_id, req.body, function (err, dbResult) {
       if (err) {
+        console.log(err);
         res.status(500).json(err);
       } else {
         if (dbResult.affectedRows == 0) {

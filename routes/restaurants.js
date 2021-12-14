@@ -189,25 +189,4 @@ router.delete("/:restaurant_id/deleteRestaurant", passport.authenticate("jwt", {
   });
 });
 
-// Removes the restaurant by restaurantId. If not your own restaurant, restaurant deletion is not possible. Works
-router.put("/:restaurant_id", upload.single('image'), function (req, res) {
-  restaurantObj = {...req.body}
-  if (req.file) restaurantObj.image = req.filename
-  restaurants.updateMultipart(req.params.restaurant_id, restaurantObj, function (err, dbResult) {
-    if (err) {
-      res.status(500).json(err);
-    } else {
-      if (dbResult.affectedRows == 0) {
-        res.status(400).json({
-          Status: 400 + ", Something wrong with restaurant deleting. Try again or contact the IT-manager",
-        });
-      } else {
-        res.status(200).json({
-          Status: 200 + ", Restaurant " + req.params.restaurant_id + " deleted",
-        });
-      }
-    }
-  });
-});
-
 module.exports = router;
