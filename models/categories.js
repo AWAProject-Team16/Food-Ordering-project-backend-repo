@@ -1,16 +1,8 @@
 const db = require("../lib/database.js");
 
 const categories = {
-  // getAllCategories: function(callback) {
-  //     return db.query('select * from categories');
-  // },
-
   getRestaurantCategories: function (id, callback) {
-    return db.query(
-      "select * from categories where restaurants_idrestaurants = ?",
-      [id],
-      callback
-    );
+    return db.query("select * from categories where restaurants_idrestaurants = ?", [id], callback);
   },
 
   getMyCategories: function (userId, callback) {
@@ -60,11 +52,7 @@ const categories = {
   },
 
   // Added by Thuc
-  getCategoryWithRestaurantNameByCategoryId: function (
-    idusers,
-    idcategories,
-    callback
-  ) {
+  getCategoryWithRestaurantNameByCategoryId: function (idusers, idcategories, callback) {
     return db.query(
       "SELECT categories.*, restaurants.name as restaurant_name FROM categories INNER JOIN restaurants \
         ON categories.restaurants_idrestaurants = restaurants.idrestaurants \

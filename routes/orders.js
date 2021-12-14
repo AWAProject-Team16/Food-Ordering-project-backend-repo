@@ -1,14 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const orders = require("../models/orders.js");
-const db = require("../lib/database.js");
 
 const passport = require("passport");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 
 router.use(bodyParser.json());
-router.use(cors());
 router.use(passport.initialize());
 
 router.post("/ordersHistory", passport.authenticate("jwt", { session: false }), function (req, res) {
@@ -172,7 +169,6 @@ router.get("/myLatestOrderDate", passport.authenticate("jwt", { session: false }
       console.log(err);
       res.sendSatus(500);
     } else {
-      console.log("ok");
       res.json(dbResult[0]);
     }
   });
